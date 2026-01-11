@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Puffly | The Ultimate Super App</title>
+    <title>Puffly | Super App</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* CSS เดิมทั้งหมดของคุณ */
         :root { --primary: #ff8fa3; --primary-grad: linear-gradient(135deg, #ffb3c1, #ff758f); --bg: #fff0f3; --card: #ffffff; --text: #4a2c32; --muted: #a38a8e; --accent: #ff4d6d; --bubble-me: #ffb3c1; --bubble-you: #ffe5ec; --nav-bg: rgba(255, 255, 255, 0.95); }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
@@ -19,17 +18,16 @@
         .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--muted); cursor: pointer; font-size: 11px; }
         .nav-item.active { color: var(--primary); }
         .nav-item i { font-size: 22px; }
+        /* TikTok Style Feed */
         #homeView { background: #000; padding-bottom: 0; overflow-y: scroll; scroll-snap-type: y mandatory; height: 100vh; scrollbar-width: none; }
         #homeView::-webkit-scrollbar { display: none; }
-        .reel-video { position: relative; width: 100%; height: 100vh; scroll-snap-align: start; display: flex; align-items: center; justify-content: center; color: white; overflow: hidden; }
+        .reel-video { position: relative; width: 100%; height: 100vh; scroll-snap-align: start; display: flex; align-items: center; justify-content: center; color: white; overflow: hidden; border-bottom: 1px solid #333; }
         .reel-video video { width: 100%; height: 100%; object-fit: cover; }
         .reel-overlay { position: absolute; bottom: 100px; left: 15px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 10; max-width: 70%; }
         .reel-actions { position: absolute; bottom: 100px; right: 10px; display: flex; flex-direction: column; gap: 18px; align-items: center; z-index: 10; }
         .action-btn { font-size: 28px; text-align: center; cursor: pointer; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3)); }
         .action-btn span { display: block; font-size: 12px; margin-top: 4px; font-weight: 500; }
-        .profile-btn img { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #fff; }
-        #uploadProgress { position: fixed; top: 0; left: 0; height: 4px; background: var(--accent); z-index: 10000; width: 0%; transition: 0.3s; }
-        /* CSS ส่วนแชทและโปรไฟล์คงเดิมจากไฟล์ก่อนหน้า */
+        /* Chat & Wallet UI */
         .chat-header { padding: 15px; background: var(--card); display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 100; }
         .chat-container { padding: 15px; display: flex; flex-direction: column; gap: 12px; height: calc(100vh - 210px); overflow-y: auto; }
         .bubble { max-width: 80%; padding: 10px 15px; border-radius: 18px; font-size: 14px; position: relative; }
@@ -37,47 +35,42 @@
         .bubble.you { align-self: flex-start; background: var(--bubble-you); border-bottom-left-radius: 4px; border: 1px solid rgba(255,143,163,0.2); }
         .chat-input-area { background: var(--card); border-top: 1px solid #eee; padding: 10px 15px 30px; }
         .input-row { display: flex; align-items: center; gap: 12px; background: #f8f8f8; padding: 10px 15px; border-radius: 25px; }
-        .wallet-card { margin: 15px; background: var(--primary-grad); border-radius: 20px; padding: 20px; color: white; box-shadow: 0 10px 25px rgba(255,143,163,0.3); }
-        .profile-pic { width: 90px; height: 90px; border-radius: 30px; background: white; margin: 20px auto 10px; display: flex; align-items: center; justify-content: center; font-size: 40px; color: var(--primary); }
+        .wallet-card { margin: 15px; background: var(--primary-grad); border-radius: 20px; padding: 20px; color: white; }
     </style>
 </head>
 <body>
-    <div id="uploadProgress"></div>
-    <div id="splash"><i class="fa-solid fa-dove splash-logo"></i><h1 style="letter-spacing: 5px; margin-top: 15px;">PUFFLY</h1></div>
+    <div id="splash"><i class="fa-solid fa-dove splash-logo"></i><h1>PUFFLY</h1></div>
 
-    <div id="homeView" class="view-section active-view">
-        </div>
+    <div id="homeView" class="view-section active-view"></div>
 
     <div id="inboxView" class="view-section">
-        <div id="chatBox" class="chat-container"></div>
+        <div class="chat-header"><b>Puffly Support</b></div>
+        <div id="chatBox" class="chat-container"><div class="bubble you">สวัสดีค่ะ มีอะไรให้ Puffly ช่วยไหมคะ? 🎀</div></div>
         <div class="chat-input-area">
             <div class="input-row">
-                <input type="text" id="msgInput" style="flex:1; background:none; border:none;" placeholder="ข้อความ...">
-                <i class="fa-solid fa-paper-plane" onclick="sendMsg()"></i>
+                <input type="text" id="msgInput" style="flex:1; background:none; border:none; outline:none;" placeholder="ส่งข้อความ...">
+                <i class="fa-solid fa-paper-plane" style="color:var(--primary);" onclick="sendMsg()"></i>
             </div>
         </div>
     </div>
 
     <div id="profileView" class="view-section">
         <div class="wallet-card">
-            <p>Coins: <span id="myCoins">0</span></p>
-            <p>Earnings: ฿<span id="myEarnings">0.00</span></p>
+            <p>เหรียญ: <span id="myCoins">0</span></p>
+            <p>รายได้: ฿<span id="myEarnings">0.00</span></p>
         </div>
+        <button onclick="addVideoLink()" style="margin:20px; padding:10px; background:var(--primary); color:white; border:none; border-radius:10px; width:calc(100% - 40px);">+ เพิ่มลิงก์วิดีโอใหม่</button>
     </div>
 
     <div class="bottom-nav">
         <div class="nav-item active" onclick="switchTab('homeView', this)"><i class="fa-solid fa-house"></i><span>หน้าหลัก</span></div>
-        <div class="nav-item" onclick="document.getElementById('videoUpload').click()"><i class="fa-solid fa-circle-plus" style="font-size:35px; color:var(--primary);"></i></div>
+        <div class="nav-item" onclick="addVideoLink()"><i class="fa-solid fa-circle-plus" style="font-size:35px; color:var(--primary);"></i></div>
         <div class="nav-item" onclick="switchTab('inboxView', this)"><i class="fa-solid fa-comment-dots"></i><span>ข้อความ</span></div>
         <div class="nav-item" onclick="switchTab('profileView', this)"><i class="fa-solid fa-user"></i><span>โปรไฟล์</span></div>
     </div>
 
-    <input type="file" id="videoUpload" hidden accept="video/*" onchange="uploadVideo(this)">
-
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
-
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyAT48SVlLZGo_XEYmf_K4MD06GqDLa_N9c",
@@ -89,53 +82,16 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        const storage = firebase.storage();
         const currentUserId = "Puffly_Creator_01";
-        // --- 1. ระบบอัปโหลดวิดีโอไป TikTok (Storage + Database) ---
-        function uploadVideo(input) {
-            const file = input.files[0];
-            if (!file) return;
-
-            // แสดง Progress Bar
-            const progBar = document.getElementById('uploadProgress');
-            
-            // 1. สร้างชื่อไฟล์และตำแหน่งใน Storage
-            const fileName = Date.now() + "_" + file.name;
-            const storageRef = storage.ref('reels/' + fileName);
-            const uploadTask = storageRef.put(file);
-
-            uploadTask.on('state_changed', 
-                (snapshot) => {
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    progBar.style.width = progress + '%';
-                }, 
-                (error) => alert("Upload failed: " + error.message), 
-                () => {
-                    // 2. เมื่ออัปโหลดเสร็จ ให้เอา URL มาเก็บใน Database
-                    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                        db.ref('reels').push({
-                            videoUrl: downloadURL,
-                            creator: currentUserId,
-                            caption: "วิดีโอใหม่จาก Puffly! ☁️",
-                            likes: 0,
-                            timestamp: Date.now()
-                        });
-                        progBar.style.width = '0%';
-                        alert("อัปโหลดวิดีโอสำเร็จ! วิดีโอจะปรากฏในหน้า Feed");
-                    });
-                }
-            );
-        }
-
-        // --- 2. ระบบดึงวิดีโอมาโชว์หน้า Home (Real-time Feed) ---
+        // --- 1. ระบบ Feed วิดีโอ (ดึงจาก Database) ---
         function loadFeed() {
             const homeView = document.getElementById('homeView');
             db.ref('reels').on('value', (snapshot) => {
-                homeView.innerHTML = ''; // ล้างหน้าจอเก่า
+                homeView.innerHTML = ''; 
                 const data = snapshot.val();
                 if (data) {
                     Object.values(data).reverse().forEach(reel => {
-                        const reelHtml = `
+                        const html = `
                             <div class="reel-video">
                                 <video src="${reel.videoUrl}" loop muted playsinline onclick="this.paused ? this.play() : this.pause()"></video>
                                 <div class="reel-overlay">
@@ -143,21 +99,43 @@
                                     <p>${reel.caption}</p>
                                 </div>
                                 <div class="reel-actions">
-                                    <div class="action-btn"><i class="fa-solid fa-heart"></i><span>${reel.likes}</span></div>
-                                    <div class="action-btn"><i class="fa-solid fa-comment"></i><span>0</span></div>
-                                    <div class="action-btn"><i class="fa-solid fa-share"></i><span>Share</span></div>
+                                    <div class="action-btn"><i class="fa-solid fa-heart"></i><span>0</span></div>
+                                    <div class="action-btn" onclick="openLive()"><i class="fa-solid fa-tower-broadcast" style="color:red;"></i><span>Live</span></div>
                                 </div>
                             </div>`;
-                        homeView.insertAdjacentHTML('beforeend', reelHtml);
+                        homeView.insertAdjacentHTML('beforeend', html);
                     });
+                } else {
+                    homeView.innerHTML = '<div style="color:white; padding:100px; text-align:center;">ยังไม่มีวิดีโอ กดปุ่ม (+) เพื่อเพิ่มวิดีโอแรก!</div>';
                 }
             });
         }
 
-        // เรียกใช้งาน Feed ทันที
-        loadFeed();
+        // --- 2. ระบบเพิ่มวิดีโอ (ใช้การแปะลิงก์ แทนการอัปโหลดไฟล์) ---
+        function addVideoLink() {
+            const url = prompt("กรุณาใส่ลิงก์ไฟล์วิดีโอ (เช่น .mp4):", "https://v.ftcdn.net/05/52/12/35/700_F_552123512_O9uF3p7R3r9J.mp4");
+            const cap = prompt("ใส่คำบรรยาย:");
+            if (url) {
+                db.ref('reels').push({
+                    videoUrl: url,
+                    creator: currentUserId,
+                    caption: cap || "วิดีโอใหม่ ☁️",
+                    timestamp: Date.now()
+                });
+                alert("เพิ่มวิดีโอเข้า Feed สำเร็จ!");
+            }
+        }
 
-        // --- ฟังก์ชันพื้นฐานอื่นๆ (Tab, Splash, Wallet) ---
+        // --- 3. ระบบกระเป๋าเงิน Real-time ---
+        db.ref('users/' + currentUserId).on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                document.getElementById('myCoins').innerText = data.coins || 0;
+                document.getElementById('myEarnings').innerText = (data.earnings || 0).toFixed(2);
+            }
+        });
+
+        // --- 4. ฟังก์ชัน UI พื้นฐาน ---
         function switchTab(viewId, el) {
             document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -165,19 +143,18 @@
             el.classList.add('active');
         }
 
-        setTimeout(() => { 
-            const s = document.getElementById('splash');
-            if(s) { s.style.opacity = '0'; setTimeout(() => s.style.display='none', 800); }
-        }, 2000);
+        function sendMsg() {
+            const inp = document.getElementById('msgInput');
+            if(!inp.value) return;
+            const b = document.createElement('div');
+            b.className = 'bubble me'; b.innerText = inp.value;
+            document.getElementById('chatBox').appendChild(b);
+            inp.value = "";
+        }
 
-        // Sync Wallet เดิม
-        db.ref('users/' + currentUserId).on('value', (s) => {
-            const d = s.val();
-            if(d) {
-                document.getElementById('myCoins').innerText = d.coins || 0;
-                document.getElementById('myEarnings').innerText = (d.earnings || 0).toFixed(2);
-            }
-        });
+        // เริ่มต้นโหลด Feed และซ่อน Splash
+        loadFeed();
+        setTimeout(() => { document.getElementById('splash').style.display='none'; }, 2000);
     </script>
 </body>
 </html>
