@@ -1,79 +1,83 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Rich Mint - Premium Lottery System</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="manifest" href="manifest.json">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Rich Mint - Premium Lottery System</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
-    <style>
-        :root { 
-            --primary: #14b8a6; 
-            --primary-dark: #0d9488; 
-            --bg: #f0fdfa; 
-            --card-bg: #ffffff; 
-            --text-main: #1f2937; 
-            --text-muted: #6b7280; 
-            --line-green: #06C755; 
-        }
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
 
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; background-color: var(--bg); color: var(--text-main); display: flex; justify-content: center; overflow-x: hidden; }
-        .app-container { width: 100%; max-width: 420px; padding: 15px; min-height: 100vh; }
+<style>
+/* ตั้งค่าสีธีม Rich Mint ให้สดใสและพรีเมียม */
+:root { 
+    --primary: #14b8a6; /* สีเขียวมิ้นต์หลัก */
+    --primary-dark: #0d9488; 
+    --bg: #f0fdfa; /* พื้นหลังสีมิ้นต์อ่อน */
+    --card-bg: #ffffff; 
+    --text-main: #1f2937; 
+    --text-muted: #6b7280; 
+    --line-green: #06C755; /* สีเขียว LINE */
+}
 
-        .card { 
-            background: var(--card-bg); 
-            border-radius: 20px; 
-            padding: 20px; 
-            margin-bottom: 15px; 
-            border: 1px solid rgba(20, 184, 166, 0.15); 
-            box-shadow: 0 8px 20px rgba(20, 184, 166, 0.05); 
-        }
+* { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; -webkit-tap-highlight-color: transparent; }
+body { margin: 0; background-color: var(--bg); color: var(--text-main); display: flex; justify-content: center; overflow-x: hidden; }
+.app-container { width: 100%; max-width: 420px; padding: 15px; min-height: 100vh; }
 
-        .btn-primary { 
-            width: 100%; padding: 14px; border: none; border-radius: 15px; 
-            background: var(--primary); color: white; font-size: 16px; 
-            font-weight: 700; cursor: pointer; display: flex; 
-            justify-content: center; align-items: center; gap: 10px; 
-            transition: 0.3s;
-        }
-        .btn-primary:active { transform: scale(0.98); background: var(--primary-dark); }
+/* ดีไซน์การ์ดให้มีความนุ่มนวล */
+.card { 
+    background: var(--card-bg); 
+    border-radius: 20px; 
+    padding: 20px; 
+    margin-bottom: 15px; 
+    border: 1px solid rgba(20, 184, 166, 0.15); 
+    box-shadow: 0 8px 20px rgba(20, 184, 166, 0.05); 
+}
 
-        input { 
-            width: 100%; padding: 14px; border: 1.5px solid #e5e7eb; 
-            border-radius: 12px; font-size: 16px; outline: none; 
-            margin-bottom: 10px; transition: 0.3s;
-        }
-        input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1); }
+.btn-primary { 
+    width: 100%; padding: 14px; border: none; border-radius: 15px; 
+    background: var(--primary); color: white; font-size: 16px; 
+    font-weight: 700; cursor: pointer; display: flex; 
+    justify-content: center; align-items: center; gap: 10px; 
+    transition: 0.3s;
+}
+.btn-primary:active { transform: scale(0.98); background: var(--primary-dark); }
 
-        .numpad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 15px 0; }
-        .num-key { 
-            aspect-ratio: 1; display: flex; align-items: center; justify-content: center; 
-            background: white; border: 1px solid #ccfbf1; border-radius: 12px; 
-            font-weight: 800; font-size: 18px; cursor: pointer; color: var(--primary-dark);
-        }
-        .type-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
-        .type-btn { 
-            padding: 12px 0; background: white; border: 1.5px solid #ccfbf1; 
-            border-radius: 12px; font-size: 13px; cursor: pointer; 
-            font-weight: 700; color: var(--text-muted);
-        }
-        .type-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+input { 
+    width: 100%; padding: 14px; border: 1.5px solid #e5e7eb; 
+    border-radius: 12px; font-size: 16px; outline: none; 
+    margin-bottom: 10px; transition: 0.3s;
+}
+input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1); }
 
-        .payout-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
-        .payout-table th, .payout-table td { border: 1px solid #f0fdfa; padding: 10px; text-align: center; }
-        .payout-table th { background: #f0fdfa; color: var(--primary-dark); font-weight: 800; }
+/* ปุ่มตัวเลขและประเภทหวย */
+.numpad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 15px 0; }
+.num-key { 
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center; 
+    background: white; border: 1px solid #ccfbf1; border-radius: 12px; 
+    font-weight: 800; font-size: 18px; cursor: pointer; color: var(--primary-dark);
+}
+.type-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
+.type-btn { 
+    padding: 12px 0; background: white; border: 1.5px solid #ccfbf1; 
+    border-radius: 12px; font-size: 13px; cursor: pointer; 
+    font-weight: 700; color: var(--text-muted);
+}
+.type-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        .win-msg { background: #dcfce7; color: #166534; padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 2px solid #22c55e; animation: bounce 0.5s; }
-        @keyframes bounce { 0% {transform: scale(0.9);} 50% {transform: scale(1.05);} 100% {transform: scale(1);} }
+/* สไตล์ตารางจ่ายเงินและแจ้งเตือน */
+.payout-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+.payout-table th, .payout-table td { border: 1px solid #f0fdfa; padding: 10px; text-align: center; }
+.payout-table th { background: #f0fdfa; color: var(--primary-dark); font-weight: 800; }
 
-        .hist-item { border-bottom: 1px solid #f0f0f0; padding: 15px 0; cursor: pointer; }
-        .hist-details { display: none; background: #f9fafb; padding: 15px; border-radius: 12px; margin-top: 10px; font-size: 14px; border-left: 5px solid var(--primary); }
-    </style>
+.win-msg { background: #dcfce7; color: #166534; padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 2px solid #22c55e; animation: bounce 0.5s; }
+@keyframes bounce { 0% {transform: scale(0.9);} 50% {transform: scale(1.05);} 100% {transform: scale(1);} }
+
+.hist-item { border-bottom: 1px solid #f0f0f0; padding: 15px 0; cursor: pointer; }
+.hist-details { display: none; background: #f9fafb; padding: 15px; border-radius: 12px; margin-top: 10px; font-size: 14px; border-left: 5px solid var(--primary); }
+</style>
 </head>
 
 <body>
@@ -84,6 +88,7 @@
         <b style="font-size:22px; color:var(--text-main);"><i class="fa-solid fa-user-shield" style="color:var(--primary);"></i> Admin Panel</b>
         <button onclick="location.reload()" style="border:none; background:#fee2e2; color:#b91c1c; padding:8px 15px; border-radius:10px; font-weight:700;">ออก</button>
     </header>
+    
     <div class="card">
       <b style="color:var(--primary-dark);"><i class="fa-solid fa-bullhorn"></i> ประกาศรางวัล Rich Mint</b>
       <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:15px;">
@@ -94,9 +99,10 @@
       </div>
       <button class="btn-primary" onclick="announce()">บันทึกรางวัลขึ้น Firebase</button>
     </div>
+
     <div class="card">
       <b style="color:var(--primary-dark);"><i class="fa-solid fa-chart-line"></i> ยอดซื้อรวมแยกตามเลข (Real-time)</b>
-      <div id="adminOrderStats" style="margin-top:15px; font-size:14px; line-height:1.8;">กำลังโหลด...</div>
+      <div id="adminOrderStats" style="margin-top:15px; font-size:14px; line-height:1.8;">กำลังโหลดข้อมูล...</div>
     </div>
   </div>
 
@@ -110,13 +116,25 @@
 
     <div id="loginBox">
       <div class="card" style="text-align:center; padding:40px 20px;">
-        <div style="font-size:60px; color:var(--primary); margin-bottom:15px;">
+        <div style="font-size:60px; color:var(--primary); margin-bottom:15px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));">
             <i class="fa-solid fa-circle-user"></i>
         </div>
         <h2 style="margin-bottom:5px;">ยินดีต้อนรับ</h2>
         <p style="color:var(--text-muted); font-size:14px; margin-bottom:25px;">เข้าสู่ระบบ Rich Mint เพื่อเริ่มเสี่ยงโชค</p>
         <input type="text" id="username" placeholder="ระบุชื่อผู้ใช้งานของคุณ">
         <button class="btn-primary" onclick="handleLogin()"><i class="fa-solid fa-right-to-bracket"></i> เริ่มต้นใช้งาน</button>
+      </div>
+
+      <div class="card">
+        <b style="color:var(--primary-dark); font-size:15px;"><i class="fa-solid fa-receipt"></i> อัตราการจ่ายรางวัล</b>
+        <table class="payout-table">
+          <tr><th>ประเภท</th><th>จ่าย (บาทละ)</th><th>จำกัด/เลข</th></tr>
+          <tr><td>2 ตัว</td><td>90</td><td>5,000</td></tr>
+          <tr><td>3 ตัว</td><td>800</td><td>2,000</td></tr>
+          <tr><td>4 ตัว</td><td>5,000</td><td>500</td></tr>
+          <tr><td>5 ตัว</td><td>30,000</td><td>200</td></tr>
+        </table>
+        <p style="font-size:12px; color:#ef4444; margin-top:12px; text-align:center; font-weight:600;">* เริ่มต้นซื้อเพียง 5 บาทเท่านั้น</p>
       </div>
     </div>
 
@@ -136,7 +154,7 @@
           <input type="number" id="priceInput" value="5" style="flex:1; font-size:18px; font-weight:bold; text-align:center; color:var(--primary-dark); border:2px solid #ccfbf1;">
         </div>
         <div class="numpad" id="numpad"></div>
-        <button class="btn-primary" onclick="addToBill()">
+        <button class="btn-primary" onclick="addToBill()" style="box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3);">
             <i class="fa-solid fa-plus-circle"></i> เพิ่มลงในบิล
         </button>
       </div>
@@ -145,224 +163,236 @@
         <b style="color:var(--primary-dark); font-size:16px;"><i class="fa-solid fa-receipt"></i> บิลปัจจุบันของคุณ</b>
         <div id="currentBill" style="margin:15px 0; font-size:15px; background: white; border-radius: 10px; padding: 10px;"></div>
         <div id="billTotal" style="text-align:right; font-weight:900; font-size:22px; color:var(--primary-dark); margin: 10px 0;">ยอดรวม: 0 บาท</div>
-        <button class="btn-primary" style="background:var(--line-green);" onclick="checkout()">
+        
+        <button class="btn-primary" style="background:var(--line-green); border-bottom: 4px solid #04943f; padding: 16px;" onclick="checkout()">
             <i class="fa-brands fa-line" style="font-size:24px;"></i> ยืนยันสั่งซื้อ & แจ้งชำระเงินทาง LINE
         </button>
       </div>
 
       <div id="historyBox" class="card" style="display:none;">
         <b style="color:var(--primary-dark);"><i class="fa-solid fa-history"></i> ประวัติการซื้อทั้งหมด</b>
-        <div id="historyList" style="margin-top:15px;">กำลังโหลด...</div>
+        <div id="historyList" style="margin-top:15px;"></div>
       </div>
     </div>
   </div>
 </div>
 
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, set, push, onValue, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getDatabase, ref, set, push, onValue, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    // Firebase Config ของคุณ
-    const firebaseConfig = {
-      apiKey: "AIzaSyAT48SVlLZGo_XEYmf_K4MD06GqDLa_N9c",
-      authDomain: "puffly-86e43.firebaseapp.com",
-      projectId: "puffly-86e43",
-      storageBucket: "puffly-86e43.firebasestorage.app",
-      messagingSenderId: "841845436320",
-      appId: "1:841845436320:web:61e2ff1988c48bc634fec5",
-      measurementId: "G-BRQ9YTPR1V"
-    };
+// วาง Firebase Config ของคุณตรงนี้
+const firebaseConfig = {
+  apiKey: "AIzaSyAT48SVlLZGo_XEYmf_K4MD06GqDLa_N9c",
+  authDomain: "puffly-86e43.firebaseapp.com",
+  projectId: "puffly-86e43",
+  storageBucket: "puffly-86e43.firebasestorage.app",
+  messagingSenderId: "841845436320",
+  appId: "1:841845436320:web:61e2ff1988c48bc634fec5",
+  measurementId: "G-BRQ9YTPR1V"
+};
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
-    let type = 2, bill = [];
-    const payout = { 2: 90, 3: 800, 4: 5000, 5: 30000 };
-    const limits = { 2: 5000, 3: 2000, 4: 500, 5: 200 };
+let type = 2, bill = [];
+const payout = { 2: 90, 3: 800, 4: 5000, 5: 30000 };
+const limits = { 2: 5000, 3: 2000, 4: 500, 5: 200 };
 
-    // --- Authentication ---
-    window.handleLogin = function() {
-        const user = document.getElementById("username").value.trim();
-        if (!user) return alert("กรุณาระบุชื่อผู้ใช้งาน");
-        
-        if (user.toLowerCase() === "admin") {
-            document.getElementById("userPanel").style.display = "none";
-            document.getElementById("adminPanel").style.display = "block";
-            loadAdmin();
-        } else {
-            localStorage.setItem("mint_user", user);
-            document.getElementById("loginBox").style.display = "none";
-            document.getElementById("mainApp").style.display = "block";
-            document.getElementById("appHeader").style.display = "flex";
-            renderPad();
-            loadHistory();
-            listenForPrizes();
-        }
-    };
+// --- ฟังก์ชันหลัก ---
 
-    // --- UI Logic ---
-    window.setType = (t, el) => {
-        type = t;
-        document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
-        el.classList.add('active');
-        document.getElementById("numInput").value = "";
-    };
+window.handleLogin = function() {
+  const user = document.getElementById("username").value.trim();
+  if (!user) return alert("กรุณาระบุชื่อผู้ใช้งาน");
+  
+  if (user.toLowerCase() === "admin") {
+    document.getElementById("userPanel").style.display = "none";
+    document.getElementById("adminPanel").style.display = "block";
+    loadAdmin();
+  } else {
+    localStorage.setItem("mint_user", user);
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("mainApp").style.display = "block";
+    document.getElementById("appHeader").style.display = "flex";
+    renderPad();
+    loadHistory(); 
+    listenForPrizes(); 
+  }
+};
 
-    window.renderPad = () => {
-        const box = document.getElementById("numpad"); box.innerHTML = "";
-        for(let i=0; i<10; i++) {
-            const d = document.createElement("div"); d.className="num-key"; d.innerText=i;
-            d.onclick=() => { if(document.getElementById("numInput").value.length < type) document.getElementById("numInput").value += i; };
-            box.appendChild(d);
-        }
-    };
+window.renderPad = function() {
+  const box = document.getElementById("numpad"); box.innerHTML = "";
+  for(let i=0; i<10; i++) {
+    const d = document.createElement("div");
+    d.className="num-key"; d.innerText=i;
+    d.onclick=() => { if(document.getElementById("numInput").value.length < type) document.getElementById("numInput").value += i; };
+    box.appendChild(d);
+  }
+};
 
-    // --- Database Operations ---
-    window.addToBill = async function() {
-        const num = document.getElementById("numInput").value;
-        const price = parseInt(document.getElementById("priceInput").value);
-        if(num.length !== type || price < 5) return alert("ขั้นต่ำ 5 บาท และเลขต้องครบจำนวนหลัก");
+window.setType = function(t, el) {
+  type = t;
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById("numInput").value = "";
+};
 
-        const snapshot = await get(ref(db, 'orders'));
-        let currentTotal = 0;
-        if(snapshot.exists()) {
-            Object.values(snapshot.val()).forEach(billObj => {
-                billObj.items.forEach(item => {
-                    if(item.num === num && item.type === type) currentTotal += item.price;
-                });
-            });
-        }
+window.addToBill = async function() {
+  const num = document.getElementById("numInput").value;
+  const price = parseInt(document.getElementById("priceInput").value);
+  if(num.length !== type || price < 5) return alert("ขั้นต่ำ 5 บาท และเลขต้องครบจำนวนหลัก");
 
-        if ((currentTotal + price) > limits[type]) {
-            return alert(`เลขนี้เต็มแล้ว! รับได้อีกเพียง ${limits[type] - currentTotal} บาท`);
-        }
+  // ตรวจสอบลิมิตจาก Firebase
+  const snapshot = await get(ref(db, 'orders'));
+  let currentTotal = 0;
+  if(snapshot.exists()) {
+    Object.values(snapshot.val()).forEach(billObj => {
+      billObj.items.forEach(item => {
+        if(item.num === num && item.type === type) currentTotal += item.price;
+      });
+    });
+  }
 
-        bill.push({ num, price, type });
-        document.getElementById("numInput").value = "";
-        document.getElementById("currentBillCard").style.display = "block";
-        renderBill();
-    };
+  if ((currentTotal + price) > limits[type]) {
+    return alert(`เลขนี้เต็มแล้ว! รับได้อีกเพียง ${limits[type] - currentTotal} บาท`);
+  }
 
-    window.checkout = function() {
-        if(bill.length === 0) return;
-        const user = localStorage.getItem("mint_user");
-        const newBill = {
-            user: user,
-            date: new Date().toLocaleString('th-TH'),
-            items: [...bill],
-            total: bill.reduce((s, i) => s + i.price, 0),
-            timestamp: Date.now()
-        };
+  bill.push({ num, price, type });
+  document.getElementById("numInput").value = "";
+  document.getElementById("currentBillCard").style.display = "block";
+  renderBill();
+};
 
-        push(ref(db, 'orders'), newBill).then(() => {
-            alert("บันทึกบิลสำเร็จ!");
-            window.open("https://lin.ee/Mm1caQx", "_blank");
-            bill = [];
-            document.getElementById("currentBillCard").style.display = "none";
-        });
-    };
+function renderBill() {
+  const box = document.getElementById("currentBill");
+  let total = 0; box.innerHTML = "";
+  bill.forEach((item, idx) => {
+    total += item.price;
+    box.innerHTML += `<div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #f0f0f0; align-items:center;">
+      <span><b style="color:var(--primary); font-size:16px;">${item.num}</b> <small>(${item.type} ตัว)</small></span>
+      <span>${item.price} บ. <i class="fa-solid fa-circle-xmark" style="color:#f87171; cursor:pointer; margin-left:12px; font-size:18px;" onclick="removeFromBill(${idx})"></i></span>
+    </div>`;
+  });
+  document.getElementById("billTotal").innerText = `ยอดรวม: ${total} บาท`;
+}
 
-    function loadHistory() {
-        const user = localStorage.getItem("mint_user");
-        onValue(ref(db, 'orders'), (snapshot) => {
-            const box = document.getElementById("historyList");
-            if(!snapshot.exists()) return box.innerHTML = "<p>ยังไม่มีประวัติ</p>";
-            
-            const myOrders = Object.values(snapshot.val()).filter(o => o.user === user).reverse();
-            box.innerHTML = myOrders.map((b, idx) => `
-                <div class="hist-item" onclick="toggleBill(${idx})">
-                    <div style="display:flex; justify-content:space-between; font-weight:700;">
-                        <span>บิลวันที่ ${b.date.split(' ')[0]}</span>
-                        <span style="color:var(--primary-dark)">${b.total} บ.</span>
-                    </div>
-                    <div id="detail-${idx}" class="hist-details">
-                        ${b.items.map(i => `<div>• <b>${i.num}</b> (${i.type} ตัว) - ${i.price} บาท</div>`).join("")}
-                    </div>
-                </div>
-            `).join("");
-        });
+window.removeFromBill = function(idx) {
+    bill.splice(idx, 1);
+    if(bill.length === 0) document.getElementById("currentBillCard").style.display = "none";
+    renderBill();
+};
+
+window.checkout = function() {
+  if(bill.length === 0) return;
+  const user = localStorage.getItem("mint_user");
+  const newBill = {
+    user: user,
+    date: new Date().toLocaleString('th-TH'),
+    items: [...bill],
+    total: bill.reduce((s, i) => s + i.price, 0),
+    timestamp: Date.now()
+  };
+
+  push(ref(db, 'orders'), newBill).then(() => {
+    alert("บันทึกบิลสำเร็จ! ระบบกำลังนำคุณไปหน้า LINE");
+    window.open("https://lin.ee/Mm1caQx", "_blank");
+    bill = [];
+    document.getElementById("currentBillCard").style.display = "none";
+  });
+};
+
+function loadHistory() {
+  const user = localStorage.getItem("mint_user");
+  onValue(ref(db, 'orders'), (snapshot) => {
+    const box = document.getElementById("historyList");
+    if(!snapshot.exists()) return box.innerHTML = "<p style='text-align:center; color:#999;'>ยังไม่มีประวัติการซื้อ</p>";
+    
+    const data = snapshot.val();
+    const myOrders = Object.values(data).filter(o => o.user === user).reverse();
+    
+    box.innerHTML = myOrders.map((b, idx) => `
+      <div class="hist-item" onclick="toggleBill(${idx})">
+        <div style="display:flex; justify-content:space-between; font-weight:700;">
+          <span><i class="fa-solid fa-file-invoice" style="color:var(--primary);"></i> บิลวันที่ ${b.date.split(' ')[0]}</span>
+          <span style="color:var(--primary-dark)">${b.total} บ. <i class="fa-solid fa-chevron-down"></i></span>
+        </div>
+        <div id="detail-${idx}" class="hist-details">
+          ${b.items.map(i => `<div style="padding:4px 0;">• <b>${i.num}</b> (${i.type} ตัว) - ${i.price} บาท</div>`).join("")}
+          <div style="margin-top:12px; color:var(--primary-dark); font-weight:bold; border-top:1px dashed #ccc; padding-top:8px;">สถานะ: รับข้อมูลแล้ว</div>
+        </div>
+      </div>`).join("");
+  });
+}
+
+function listenForPrizes() {
+  onValue(ref(db, 'official_prize'), (snapshot) => {
+    if(snapshot.exists()) {
+      checkWinLocally(snapshot.val());
     }
+  });
+}
 
-    function listenForPrizes() {
-        onValue(ref(db, 'official_prize'), (snapshot) => {
-            if(snapshot.exists()) checkWinLocally(snapshot.val());
+function checkWinLocally(prizes) {
+  const user = localStorage.getItem("mint_user");
+  const alertBox = document.getElementById("winAlert");
+  alertBox.innerHTML = "";
+
+  get(ref(db, 'orders')).then(snapshot => {
+    if(snapshot.exists()){
+      Object.values(snapshot.val()).filter(o => o.user === user).forEach(b => {
+        b.items.forEach(h => {
+          let win = 0;
+          if(h.type == 2 && h.num == prizes.p2) win = h.price * payout[2];
+          if(h.type == 3 && h.num == prizes.p3) win = h.price * payout[3];
+          if(h.type == 4 && h.num == prizes.p4) win = h.price * payout[4];
+          if(h.type == 5 && h.num == prizes.p5) win = h.price * payout[5];
+          if(win > 0) alertBox.innerHTML += `<div class="win-msg"><i class="fa-solid fa-trophy"></i> ถูกรางวัล! เลข ${h.num} รับ ${win.toLocaleString()} บ.</div>`;
         });
+      });
     }
+  });
+}
 
-    function checkWinLocally(prizes) {
-        const user = localStorage.getItem("mint_user");
-        const alertBox = document.getElementById("winAlert");
-        alertBox.innerHTML = "";
-        get(ref(db, 'orders')).then(snapshot => {
-            if(!snapshot.exists()) return;
-            Object.values(snapshot.val()).filter(o => o.user === user).forEach(b => {
-                b.items.forEach(h => {
-                    let win = 0;
-                    if(h.type == 2 && h.num == prizes.p2) win = h.price * payout[2];
-                    if(h.type == 3 && h.num == prizes.p3) win = h.price * payout[3];
-                    if(h.type == 4 && h.num == prizes.p4) win = h.price * payout[4];
-                    if(h.type == 5 && h.num == prizes.p5) win = h.price * payout[5];
-                    if(win > 0) alertBox.innerHTML += `<div class="win-msg"><i class="fa-solid fa-trophy"></i> ถูกรางวัล! เลข ${h.num} รับ ${win.toLocaleString()} บ.</div>`;
-                });
-            });
-        });
-    }
+// --- แอดมินฟังก์ชัน ---
+window.announce = function() {
+  const res = { 
+    p2: document.getElementById("p2").value, 
+    p3: document.getElementById("p3").value, 
+    p4: document.getElementById("p4").value, 
+    p5: document.getElementById("p5").value 
+  };
+  set(ref(db, 'official_prize'), res).then(() => alert("ประกาศรางวัลสำเร็จ!"));
+};
 
-    // --- Admin Functions ---
-    window.announce = function() {
-        const res = { 
-            p2: document.getElementById("p2").value, 
-            p3: document.getElementById("p3").value, 
-            p4: document.getElementById("p4").value, 
-            p5: document.getElementById("p5").value 
-        };
-        set(ref(db, 'official_prize'), res).then(() => alert("ประกาศผลเรียบร้อย!"));
-    };
+function loadAdmin() {
+  onValue(ref(db, 'orders'), (snapshot) => {
+    const statsBox = document.getElementById("adminOrderStats");
+    if(!snapshot.exists()) return statsBox.innerText = "ยังไม่มีข้อมูล";
+    let summary = {};
+    Object.values(snapshot.val()).forEach(bill => {
+      bill.items.forEach(o => {
+        let key = `${o.num} (${o.type} ตัว)`;
+        summary[key] = (summary[key] || 0) + o.price;
+      });
+    });
+    statsBox.innerHTML = Object.entries(summary).sort((a,b) => b[1] - a[1]).map(([num, total]) => `
+      <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #f0fdfa;">
+          <span>เลข ${num}</span>
+          <b style="color:var(--primary-dark)">${total} บาท</b>
+      </div>`).join("");
+  });
+}
 
-    function loadAdmin() {
-        onValue(ref(db, 'orders'), (snapshot) => {
-            const statsBox = document.getElementById("adminOrderStats");
-            if(!snapshot.exists()) return statsBox.innerText = "ยังไม่มีข้อมูล";
-            let summary = {};
-            Object.values(snapshot.val()).forEach(bill => {
-                bill.items.forEach(o => {
-                    let key = `${o.num} (${o.type} ตัว)`;
-                    summary[key] = (summary[key] || 0) + o.price;
-                });
-            });
-            statsBox.innerHTML = Object.entries(summary).sort((a,b) => b[1] - a[1]).map(([num, total]) => `
-                <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #f0fdfa;">
-                    <span>เลข ${num}</span><b>${total} บาท</b>
-                </div>`).join("");
-        });
-    }
+// UI Helpers
+window.toggleBill = (idx) => {
+  const el = document.getElementById(`detail-${idx}`);
+  el.style.display = (el.style.display === "block") ? "none" : "block";
+};
+window.toggleHistory = () => {
+  const box = document.getElementById("historyBox");
+  box.style.display = (box.style.display === "none") ? "block" : "none";
+};
 
-    // --- Helpers ---
-    window.toggleBill = (idx) => {
-        const el = document.getElementById(`detail-${idx}`);
-        el.style.display = (el.style.display === "block") ? "none" : "block";
-    };
-    window.toggleHistory = () => {
-        const box = document.getElementById("historyBox");
-        box.style.display = (box.style.display === "none") ? "block" : "none";
-    };
-    window.removeFromBill = (idx) => {
-        bill.splice(idx, 1);
-        if(bill.length === 0) document.getElementById("currentBillCard").style.display = "none";
-        renderBill();
-    };
-    function renderBill() {
-        const box = document.getElementById("currentBill");
-        let total = 0; box.innerHTML = "";
-        bill.forEach((item, idx) => {
-            total += item.price;
-            box.innerHTML += `<div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #f0f0f0;">
-                <span><b>${item.num}</b> (${item.type})</span>
-                <span>${item.price} บ. <i class="fa-solid fa-circle-xmark" style="color:#f87171;" onclick="removeFromBill(${idx})"></i></span>
-            </div>`;
-        });
-        document.getElementById("billTotal").innerText = `ยอดรวม: ${total} บาท`;
-    }
 </script>
 </body>
 </html>
