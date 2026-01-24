@@ -18,25 +18,23 @@
 </script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="manifest" href="manifest.json">
 
 <style>
 /* ตั้งค่าสีธีม Rich Mint ให้สดใสและพรีเมียม */
 :root { 
-    --primary: #14b8a6; /* สีเขียวมิ้นต์หลัก */
+    --primary: #14b8a6; 
     --primary-dark: #0d9488; 
-    --bg: #f0fdfa; /* พื้นหลังสีมิ้นต์อ่อน */
+    --bg: #f0fdfa; 
     --card-bg: #ffffff; 
     --text-main: #1f2937; 
     --text-muted: #6b7280; 
-    --line-green: #06C755; /* สีเขียว LINE */
+    --line-green: #06C755;
 }
 
 * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; -webkit-tap-highlight-color: transparent; }
 body { margin: 0; background-color: var(--bg); color: var(--text-main); display: flex; justify-content: center; overflow-x: hidden; }
 .app-container { width: 100%; max-width: 420px; padding: 15px; min-height: 100vh; }
 
-/* ดีไซน์การ์ดให้มีความนุ่มนวล */
 .card { 
     background: var(--card-bg); 
     border-radius: 20px; 
@@ -62,7 +60,6 @@ input {
 }
 input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1); }
 
-/* ปุ่มตัวเลขและประเภทหวย */
 .numpad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 15px 0; }
 .num-key { 
     aspect-ratio: 1; display: flex; align-items: center; justify-content: center; 
@@ -77,7 +74,6 @@ input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(20, 184, 
 }
 .type-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-/* สไตล์ตารางจ่ายเงินและแจ้งเตือน */
 .payout-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
 .payout-table th, .payout-table td { border: 1px solid #f0fdfa; padding: 10px; text-align: center; }
 .payout-table th { background: #f0fdfa; color: var(--primary-dark); font-weight: 800; }
@@ -87,6 +83,10 @@ input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(20, 184, 
 
 .hist-item { border-bottom: 1px solid #f0f0f0; padding: 15px 0; cursor: pointer; }
 .hist-details { display: none; background: #f9fafb; padding: 15px; border-radius: 12px; margin-top: 10px; font-size: 14px; border-left: 5px solid var(--primary); }
+
+/* Admin Extra UI */
+.admin-bill-card { background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+.winner-gold { background: #fefce8 !important; border: 1px solid #facc15 !important; }
 </style>
 </head>
 
@@ -111,7 +111,7 @@ input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(20, 184, 
     </div>
 
     <div class="card">
-      <b style="color:var(--primary-dark);"><i class="fa-solid fa-chart-line"></i> ยอดซื้อรวมแยกตามเลข (Real-time)</b>
+      <b style="color:var(--primary-dark);"><i class="fa-solid fa-receipt"></i> รายการบิล & ยอดรวมสรุป</b>
       <div id="adminOrderStats" style="margin-top:15px; font-size:14px; line-height:1.8;">กำลังโหลดข้อมูล...</div>
     </div>
   </div>
@@ -186,12 +186,11 @@ input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(20, 184, 
     </div>
   </div>
 </div>
-
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getDatabase, ref, set, push, onValue, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-// วาง Firebase Config ของคุณตรงนี้
+// Firebase Config เดิมของคุณ
 const firebaseConfig = {
   apiKey: "AIzaSyAT48SVlLZGo_XEYmf_K4MD06GqDLa_N9c",
   authDomain: "puffly-86e43.firebaseapp.com",
@@ -202,15 +201,15 @@ const firebaseConfig = {
   measurementId: "G-BRQ9YTPR1V",
   databaseURL: "https://puffly-86e43-default-rtdb.asia-southeast1.firebasedatabase.app"
 };
-  const app = initializeApp(firebaseConfig);
+
+const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 let type = 2, bill = [];
 const payout = { 2: 90, 3: 800, 4: 5000, 5: 30000 };
 const limits = { 2: 5000, 3: 2000, 4: 500, 5: 200 };
 
-// --- ฟังก์ชันหลัก ---
-
+// --- ระบบ Login ---
 window.handleLogin = function() {
   const user = document.getElementById("username").value.trim();
   if (!user) return alert("กรุณาระบุชื่อผู้ใช้งาน");
@@ -230,6 +229,7 @@ window.handleLogin = function() {
   }
 };
 
+// --- ระบบ Numpad & การเลือกเลข ---
 window.renderPad = function() {
   const box = document.getElementById("numpad"); box.innerHTML = "";
   for(let i=0; i<10; i++) {
@@ -252,7 +252,6 @@ window.addToBill = async function() {
   const price = parseInt(document.getElementById("priceInput").value);
   if(num.length !== type || price < 5) return alert("ขั้นต่ำ 5 บาท และเลขต้องครบจำนวนหลัก");
 
-  // ตรวจสอบลิมิตจาก Firebase
   try {
     const snapshot = await get(ref(db, 'orders'));
     let currentTotal = 0;
@@ -275,7 +274,6 @@ window.addToBill = async function() {
     document.getElementById("currentBillCard").style.display = "block";
     renderBill();
   } catch (error) {
-    console.error(error);
     alert("เกิดข้อผิดพลาดในการเชื่อมต่อฐานข้อมูล");
   }
 };
@@ -318,15 +316,14 @@ window.checkout = function() {
   });
 };
 
+// --- ระบบประวัติ & ตรวจรางวัลสำหรับ User ---
 function loadHistory() {
   const user = localStorage.getItem("mint_user");
   onValue(ref(db, 'orders'), (snapshot) => {
     const box = document.getElementById("historyList");
     if(!snapshot.exists()) return box.innerHTML = "<p style='text-align:center; color:#999;'>ยังไม่มีประวัติการซื้อ</p>";
-    
     const data = snapshot.val();
     const myOrders = Object.values(data).filter(o => o.user === user).reverse();
-    
     box.innerHTML = myOrders.map((b, idx) => `
       <div class="hist-item" onclick="window.toggleBill(${idx})">
         <div style="display:flex; justify-content:space-between; font-weight:700;">
@@ -335,7 +332,6 @@ function loadHistory() {
         </div>
         <div id="detail-${idx}" class="hist-details">
           ${b.items.map(i => `<div style="padding:4px 0;">• <b>${i.num}</b> (${i.type} ตัว) - ${i.price} บาท</div>`).join("")}
-          <div style="margin-top:12px; color:var(--primary-dark); font-weight:bold; border-top:1px dashed #ccc; padding-top:8px;">สถานะ: รับข้อมูลแล้ว</div>
         </div>
       </div>`).join("");
   });
@@ -343,9 +339,7 @@ function loadHistory() {
 
 function listenForPrizes() {
   onValue(ref(db, 'official_prize'), (snapshot) => {
-    if(snapshot.exists()) {
-      checkWinLocally(snapshot.val());
-    }
+    if(snapshot.exists()) checkWinLocally(snapshot.val());
   });
 }
 
@@ -353,7 +347,6 @@ function checkWinLocally(prizes) {
   const user = localStorage.getItem("mint_user");
   const alertBox = document.getElementById("winAlert");
   alertBox.innerHTML = "";
-
   get(ref(db, 'orders')).then(snapshot => {
     if(snapshot.exists()){
       Object.values(snapshot.val()).filter(o => o.user === user).forEach(b => {
@@ -370,7 +363,7 @@ function checkWinLocally(prizes) {
   });
 }
 
-// --- แอดมินฟังก์ชัน ---
+// --- แอดมินฟังก์ชัน: แยกบิล & ตรวจรางวัลรายคน ---
 window.announce = function() {
   const res = { 
     p2: document.getElementById("p2").value, 
@@ -385,24 +378,46 @@ function loadAdmin() {
   onValue(ref(db, 'orders'), (snapshot) => {
     const statsBox = document.getElementById("adminOrderStats");
     if(!snapshot.exists()) return statsBox.innerText = "ยังไม่มีข้อมูล";
-    let summary = {};
-    Object.values(snapshot.val()).forEach(bill => {
-      if(bill.items) {
-        bill.items.forEach(o => {
-          let key = `${o.num} (${o.type} ตัว)`;
-          summary[key] = (summary[key] || 0) + o.price;
+    
+    get(ref(db, 'official_prize')).then(prizeSnap => {
+      const prizes = prizeSnap.exists() ? prizeSnap.val() : {};
+      const allOrders = snapshot.val();
+      let htmlContent = `<b style="color:var(--primary-dark); display:block; margin-bottom:10px; border-bottom:2px solid #ccfbf1;"> รายการบิลแยกรายคน</b>`;
+
+      Object.values(allOrders).reverse().forEach(order => {
+        let isWinner = false;
+        order.items.forEach(item => {
+          if ((item.type == 2 && item.num == prizes.p2) || (item.type == 3 && item.num == prizes.p3) || (item.type == 4 && item.num == prizes.p4) || (item.type == 5 && item.num == prizes.p5)) isWinner = true;
         });
-      }
+
+        htmlContent += `
+          <div class="admin-bill-card ${isWinner ? 'winner-gold' : ''}">
+            <div style="display:flex; justify-content:space-between;">
+              <b><i class="fa-solid fa-user"></i> ${order.user}</b>
+              <small>${order.date}</small>
+            </div>
+            <div style="font-size:13px; margin:8px 0;">${order.items.map(i => `• ${i.num} (${i.type}ต.) - ${i.price}บ.`).join('<br>')}</div>
+            <div style="display:flex; justify-content:space-between; border-top:1px dashed #ddd; padding-top:5px;">
+              <b>ยอด: ${order.total}</b>
+              <b style="color:${isWinner ? '#ca8a04' : '#14b8a6'}">${isWinner ? '🏆 ถูกรางวัล!' : 'รอผล'}</b>
+            </div>
+          </div>`;
+      });
+
+      // สรุปรายเลข
+      let summary = {};
+      Object.values(allOrders).forEach(bill => {
+        bill.items.forEach(o => { let key = `${o.num} (${o.type} ตัว)`; summary[key] = (summary[key] || 0) + o.price; });
+      });
+      htmlContent += `<b style="color:var(--primary-dark); display:block; margin-top:20px; border-bottom:2px solid #ccfbf1;"> สรุปยอดรวมรายเลข</b>`;
+      htmlContent += Object.entries(summary).sort((a,b) => b[1] - a[1]).map(([num, total]) => `
+        <div style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #f0fdfa;"><span>เลข ${num}</span><b>${total} บาท</b></div>`).join("");
+      
+      statsBox.innerHTML = htmlContent;
     });
-    statsBox.innerHTML = Object.entries(summary).sort((a,b) => b[1] - a[1]).map(([num, total]) => `
-      <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #f0fdfa;">
-          <span>เลข ${num}</span>
-          <b style="color:var(--primary-dark)">${total} บาท</b>
-      </div>`).join("");
   });
 }
 
-// UI Helpers
 window.toggleBill = (idx) => {
   const el = document.getElementById(`detail-${idx}`);
   el.style.display = (el.style.display === "block") ? "none" : "block";
@@ -411,8 +426,6 @@ window.toggleHistory = () => {
   const box = document.getElementById("historyBox");
   box.style.display = (box.style.display === "none") ? "block" : "none";
 };
-
 </script>
 </body>
 </html>
-
