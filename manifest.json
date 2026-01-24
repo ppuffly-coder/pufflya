@@ -1,0 +1,24 @@
+{
+  "name": "Rich Mint Premium",
+  "short_name": "Rich Mint",
+  "description": "ระบบจัดการลอตเตอรี่พรีเมียม Rich Mint",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#f0fdfa",
+  "theme_color": "#14b8a6",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
