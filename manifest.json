@@ -1,24 +1,16 @@
 {
-  "name": "Rich Mint Premium",
+  "name": "Rich Mint",
   "short_name": "Rich Mint",
-  "description": "ระบบจัดการลอตเตอรี่พรีเมียม Rich Mint",
-  "start_url": "index.html",
+  "start_url": "/pufflya/",
   "display": "standalone",
-  "background_color": "#f0fdfa",
+  "background_color": "#002b26",
   "theme_color": "#14b8a6",
-  "orientation": "portrait",
   "icons": [
     {
-      "src": "icon.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "icon.png",
+      "src": "icon-circle.png", 
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     }
   ]
 }
