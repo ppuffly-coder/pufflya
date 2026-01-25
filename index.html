@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Rich Mint - Premium Lottery System</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <link rel="manifest" href="manifest.json">
 
 <script>
@@ -20,7 +21,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
 <style>
-/* ตั้งค่าสีธีม Rich Mint ให้สดใสและพรีเมียม */
+/* ธีมเดิมของคุณ */
 :root { 
     --primary: #14b8a6; 
     --primary-dark: #0d9488; 
@@ -29,6 +30,8 @@
     --text-main: #1f2937; 
     --text-muted: #6b7280; 
     --line-green: #06C755;
+    --pending: #f59e0b;
+    --paid: #10b981;
 }
 
 * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -37,9 +40,7 @@ body { margin: 0; background-color: var(--bg); color: var(--text-main); display:
 
 .card { 
     background: var(--card-bg); 
-    border-radius: 20px; 
-    padding: 20px; 
-    margin-bottom: 15px; 
+    border-radius: 20px; padding: 20px; margin-bottom: 15px; 
     border: 1px solid rgba(20, 184, 166, 0.15); 
     box-shadow: 0 8px 20px rgba(20, 184, 166, 0.05); 
 }
@@ -84,6 +85,20 @@ input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(20, 184, 
 .hist-item { border-bottom: 1px solid #f0f0f0; padding: 15px 0; cursor: pointer; }
 .hist-details { display: none; background: #f9fafb; padding: 15px; border-radius: 12px; margin-top: 10px; font-size: 14px; border-left: 5px solid var(--primary); }
 
+/* สไตล์บิลดิจิทัลใหม่ */
+#billModal {
+    display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
+    background:rgba(0,0,0,0.8); z-index:10000; justify-content:center; align-items:center; padding:20px;
+}
+.digital-bill {
+    background:white; width:100%; max-width:350px; border-radius:20px; overflow:hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3); position:relative;
+}
+.bill-header { background:var(--primary); color:white; padding:20px; text-align:center; }
+.bill-body { padding:20px; background:white; position:relative; }
+.bill-row { display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px; }
+.status-badge { padding:4px 12px; border-radius:50px; font-size:12px; font-weight:bold; color:white; }
+
 /* Admin Extra UI */
 .admin-bill-card { background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
 .winner-gold { background: #fefce8 !important; border: 1px solid #facc15 !important; }
@@ -92,6 +107,34 @@ input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(20, 184, 
 
 <body>
 <div class="app-container">
+
+  <div id="billModal">
+      <div class="digital-bill" id="captureArea">
+          <div class="bill-header">
+              <h2 style="margin:0;">RICH MINT</h2>
+              <small id="mBillId">#RM-000000</small>
+          </div>
+          <div class="bill-body">
+              <div style="text-align:center; margin-bottom:15px;">
+                  <span id="mStatus" class="status-badge">รอชำระเงิน</span>
+              </div>
+              <div id="mItems" style="border-bottom:1px dashed #ccc; padding-bottom:10px; margin-bottom:10px;"></div>
+              <div class="bill-row" style="font-size:18px; font-weight:bold;">
+                  <span>ยอดรวมทั้งสิ้น</span>
+                  <span style="color:var(--primary);" id="mTotal">0 บาท</span>
+              </div>
+              <div style="margin-top:20px; font-size:11px; color:#888; border-top:1px solid #eee; padding-top:10px;">
+                  <div>📅 วันที่ซื้อ: <span id="mBuyDate">-</span></div>
+                  <div style="color:var(--primary-dark); font-weight:bold; margin-top:4px;">🎯 งวดวันที่: <span id="mDrawDate">-</span></div>
+                  <div style="margin-top:10px; text-align:center; font-style:italic;">ขอบคุณที่ใช้บริการ Rich Mint</div>
+              </div>
+          </div>
+      </div>
+      <div style="margin-top:15px; display:flex; gap:10px; width:100%; max-width:350px;">
+          <button class="btn-primary" style="flex:1;" onclick="window.saveBillImage()"><i class="fa-solid fa-download"></i> บันทึกภาพ</button>
+          <button class="btn-primary" style="flex:1; background:#666;" onclick="document.getElementById('billModal').style.display='none'">ปิด</button>
+      </div>
+  </div>
 
   <div id="adminPanel" style="display:none;">
     <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
@@ -126,7 +169,7 @@ input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(20, 184, 
 
     <div id="loginBox">
       <div class="card" style="text-align:center; padding:40px 20px;">
-        <div style="font-size:60px; color:var(--primary); margin-bottom:15px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));">
+        <div style="font-size:60px; color:var(--primary); margin-bottom:15px;">
             <i class="fa-solid fa-circle-user"></i>
         </div>
         <h2 style="margin-bottom:5px;">ยินดีต้อนรับ</h2>
@@ -134,7 +177,6 @@ input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(20, 184, 
         <input type="text" id="username" placeholder="ระบุชื่อผู้ใช้งานของคุณ">
         <button class="btn-primary" onclick="window.handleLogin()"><i class="fa-solid fa-right-to-bracket"></i> เริ่มต้นใช้งาน</button>
       </div>
-
       <div class="card">
         <b style="color:var(--primary-dark); font-size:15px;"><i class="fa-solid fa-receipt"></i> อัตราการจ่ายรางวัล</b>
         <table class="payout-table">
@@ -144,7 +186,6 @@ input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(20, 184, 
           <tr><td>4 ตัว</td><td>5,000</td><td>500</td></tr>
           <tr><td>5 ตัว</td><td>30,000</td><td>200</td></tr>
         </table>
-        <p style="font-size:12px; color:#ef4444; margin-top:12px; text-align:center; font-weight:600;">* เริ่มต้นซื้อเพียง 5 บาทเท่านั้น</p>
       </div>
     </div>
 
@@ -160,22 +201,21 @@ input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(20, 184, 
           <button class="type-btn" onclick="window.setType(5, this)">5 ตัว</button>
         </div>
         <div style="display:flex; gap:12px; margin-top:20px;">
-          <input type="number" id="numInput" placeholder="ใส่เลข" style="flex:2; font-size:20px; font-weight:bold; text-align:center; border:2px solid #ccfbf1;">
-          <input type="number" id="priceInput" value="5" style="flex:1; font-size:18px; font-weight:bold; text-align:center; color:var(--primary-dark); border:2px solid #ccfbf1;">
+          <input type="number" id="numInput" placeholder="ใส่เลข" style="flex:2; font-size:20px; font-weight:bold; text-align:center;">
+          <input type="number" id="priceInput" value="5" style="flex:1; font-size:18px; font-weight:bold; text-align:center;">
         </div>
         <div class="numpad" id="numpad"></div>
-        <button class="btn-primary" onclick="window.addToBill()" style="box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3);">
+        <button class="btn-primary" onclick="window.addToBill()">
             <i class="fa-solid fa-plus-circle"></i> เพิ่มลงในบิล
         </button>
       </div>
 
-      <div class="card" id="currentBillCard" style="display:none; border: 2px solid var(--primary); background: #f0fdfa;">
+      <div class="card" id="currentBillCard" style="display:none; border: 2px solid var(--primary);">
         <b style="color:var(--primary-dark); font-size:16px;"><i class="fa-solid fa-receipt"></i> บิลปัจจุบันของคุณ</b>
-        <div id="currentBill" style="margin:15px 0; font-size:15px; background: white; border-radius: 10px; padding: 10px;"></div>
-        <div id="billTotal" style="text-align:right; font-weight:900; font-size:22px; color:var(--primary-dark); margin: 10px 0;">ยอดรวม: 0 บาท</div>
-        
-        <button class="btn-primary" style="background:var(--line-green); border-bottom: 4px solid #04943f; padding: 16px;" onclick="window.checkout()">
-            <i class="fa-brands fa-line" style="font-size:24px;"></i> ยืนยันสั่งซื้อ & แจ้งชำระเงินทาง LINE
+        <div id="currentBill" style="margin:15px 0;"></div>
+        <div id="billTotal" style="text-align:right; font-weight:900; font-size:22px; margin: 10px 0;">ยอดรวม: 0 บาท</div>
+        <button class="btn-primary" style="background:var(--line-green);" onclick="window.checkout()">
+            <i class="fa-brands fa-line" style="font-size:24px;"></i> สั่งซื้อ & แจ้งชำระเงินทาง LINE
         </button>
       </div>
 
@@ -188,9 +228,8 @@ input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(20, 184, 
 </div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getDatabase, ref, set, push, onValue, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import { getDatabase, ref, set, push, onValue, get, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-// Firebase Config เดิมของคุณ
 const firebaseConfig = {
   apiKey: "AIzaSyAT48SVlLZGo_XEYmf_K4MD06GqDLa_N9c",
   authDomain: "puffly-86e43.firebaseapp.com",
@@ -208,6 +247,26 @@ const db = getDatabase(app);
 let type = 2, bill = [];
 const payout = { 2: 90, 3: 800, 4: 5000, 5: 30000 };
 const limits = { 2: 5000, 3: 2000, 4: 500, 5: 200 };
+
+// --- ฟังก์ชันเสริม: คำนวณงวดหวยถัดไป ---
+function getNextDrawDate() {
+    const now = new Date();
+    const day = now.getDay(); 
+    const hour = now.getHours();
+    const minute = now.getMinutes();
+    const currentTime = (hour * 100) + minute;
+    let daysUntilNext = 0;
+
+    if ((day === 1 || day === 3 || day === 5) && currentTime >= 1930) daysUntilNext = (day === 5) ? 3 : 2;
+    else if (day === 1 || day === 3 || day === 5) daysUntilNext = 0;
+    else if (day === 2 || day === 4) daysUntilNext = 1;
+    else if (day === 6) daysUntilNext = 2;
+    else if (day === 0) daysUntilNext = 1;
+
+    const drawDate = new Date(now);
+    drawDate.setDate(now.getDate() + daysUntilNext);
+    return drawDate.toLocaleDateString('th-TH');
+}
 
 // --- ระบบ Login ---
 window.handleLogin = function() {
@@ -229,7 +288,7 @@ window.handleLogin = function() {
   }
 };
 
-// --- ระบบ Numpad & การเลือกเลข ---
+// --- ระบบเลือกเลข & บิล ---
 window.renderPad = function() {
   const box = document.getElementById("numpad"); box.innerHTML = "";
   for(let i=0; i<10; i++) {
@@ -252,30 +311,21 @@ window.addToBill = async function() {
   const price = parseInt(document.getElementById("priceInput").value);
   if(num.length !== type || price < 5) return alert("ขั้นต่ำ 5 บาท และเลขต้องครบจำนวนหลัก");
 
-  try {
-    const snapshot = await get(ref(db, 'orders'));
-    let currentTotal = 0;
-    if(snapshot.exists()) {
-      Object.values(snapshot.val()).forEach(billObj => {
-        if(billObj.items) {
-          billObj.items.forEach(item => {
-            if(item.num === num && item.type === type) currentTotal += parseInt(item.price);
-          });
-        }
+  const snapshot = await get(ref(db, 'orders'));
+  let currentTotal = 0;
+  if(snapshot.exists()) {
+    Object.values(snapshot.val()).forEach(bObj => {
+      if(bObj.items) bObj.items.forEach(item => {
+        if(item.num === num && item.type === type) currentTotal += parseInt(item.price);
       });
-    }
-
-    if ((currentTotal + price) > limits[type]) {
-      return alert(`เลขนี้เต็มแล้ว! รับได้อีกเพียง ${limits[type] - currentTotal} บาท`);
-    }
-
-    bill.push({ num, price, type });
-    document.getElementById("numInput").value = "";
-    document.getElementById("currentBillCard").style.display = "block";
-    renderBill();
-  } catch (error) {
-    alert("เกิดข้อผิดพลาดในการเชื่อมต่อฐานข้อมูล");
+    });
   }
+  if ((currentTotal + price) > limits[type]) return alert(`เลขนี้เต็มแล้ว! รับได้อีกเพียง ${limits[type] - currentTotal} บาท`);
+
+  bill.push({ num, price, type });
+  document.getElementById("numInput").value = "";
+  document.getElementById("currentBillCard").style.display = "block";
+  renderBill();
 };
 
 function renderBill() {
@@ -283,149 +333,127 @@ function renderBill() {
   let total = 0; box.innerHTML = "";
   bill.forEach((item, idx) => {
     total += item.price;
-    box.innerHTML += `<div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #f0f0f0; align-items:center;">
-      <span><b style="color:var(--primary); font-size:16px;">${item.num}</b> <small>(${item.type} ตัว)</small></span>
-      <span>${item.price} บ. <i class="fa-solid fa-circle-xmark" style="color:#f87171; cursor:pointer; margin-left:12px; font-size:18px;" onclick="window.removeFromBill(${idx})"></i></span>
+    box.innerHTML += `<div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #f0f0f0;">
+      <span><b>${item.num}</b> <small>(${item.type} ตัว)</small></span>
+      <span>${item.price} บ. <i class="fa-solid fa-circle-xmark" style="color:#f87171; cursor:pointer;" onclick="window.removeFromBill(${idx})"></i></span>
     </div>`;
   });
   document.getElementById("billTotal").innerText = `ยอดรวม: ${total} บาท`;
 }
 
-window.removeFromBill = function(idx) {
-    bill.splice(idx, 1);
-    if(bill.length === 0) document.getElementById("currentBillCard").style.display = "none";
-    renderBill();
-};
+window.removeFromBill = (idx) => { bill.splice(idx, 1); if(bill.length === 0) document.getElementById("currentBillCard").style.display = "none"; renderBill(); };
 
+// --- ยืนยันสั่งซื้อ (สร้างบิลดิจิทัล) ---
 window.checkout = function() {
   if(bill.length === 0) return;
   const user = localStorage.getItem("mint_user");
+  const billId = "RM-" + Date.now().toString().slice(-6);
+  const buyDate = new Date().toLocaleString('th-TH');
+  const drawDate = getNextDrawDate();
+  const total = bill.reduce((s, i) => s + i.price, 0);
+
   const newBill = {
-    user: user,
-    date: new Date().toLocaleString('th-TH'),
-    items: [...bill],
-    total: bill.reduce((s, i) => s + i.price, 0),
-    timestamp: Date.now()
+    billId, user, items: [...bill], total, buyDate, drawDate, 
+    status: "pending", timestamp: Date.now()
   };
 
   push(ref(db, 'orders'), newBill).then(() => {
-    alert("บันทึกบิลสำเร็จ! ระบบกำลังนำคุณไปหน้า LINE");
+    showDigitalBill(newBill);
     window.open("https://lin.ee/Mm1caQx", "_blank");
     bill = [];
     document.getElementById("currentBillCard").style.display = "none";
   });
 };
 
-// --- ระบบประวัติ & ตรวจรางวัลสำหรับ User ---
+// --- แสดงบิล & บันทึกภาพ ---
+function showDigitalBill(b) {
+    document.getElementById("mBillId").innerText = `#${b.billId}`;
+    document.getElementById("mStatus").innerText = b.status === 'paid' ? 'ชำระเงินแล้ว' : 'รอชำระเงิน';
+    document.getElementById("mStatus").style.background = b.status === 'paid' ? 'var(--paid)' : 'var(--pending)';
+    document.getElementById("mTotal").innerText = `${b.total} บาท`;
+    document.getElementById("mBuyDate").innerText = b.buyDate;
+    document.getElementById("mDrawDate").innerText = b.drawDate;
+    document.getElementById("mItems").innerHTML = b.items.map(i => `<div class="bill-row"><span>${i.num} (${i.type}ต.)</span><b>${i.price}.-</b></div>`).join("");
+    document.getElementById("billModal").style.display = "flex";
+}
+
+window.saveBillImage = function() {
+    const area = document.getElementById("captureArea");
+    html2canvas(area, { scale: 2 }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `RichMint-Bill.png`;
+        link.href = canvas.toDataURL();
+        link.click();
+    });
+};
+
+// --- ประวัติ & แอดมิน ---
 function loadHistory() {
   const user = localStorage.getItem("mint_user");
   onValue(ref(db, 'orders'), (snapshot) => {
     const box = document.getElementById("historyList");
-    if(!snapshot.exists()) return box.innerHTML = "<p style='text-align:center; color:#999;'>ยังไม่มีประวัติการซื้อ</p>";
-    const data = snapshot.val();
-    const myOrders = Object.values(data).filter(o => o.user === user).reverse();
+    if(!snapshot.exists()) return box.innerHTML = "ไม่มีประวัติ";
+    const myOrders = Object.entries(snapshot.val()).map(([key, val]) => ({key, ...val})).filter(o => o.user === user).reverse();
     box.innerHTML = myOrders.map((b, idx) => `
-      <div class="hist-item" onclick="window.toggleBill(${idx})">
-        <div style="display:flex; justify-content:space-between; font-weight:700;">
-          <span><i class="fa-solid fa-file-invoice" style="color:var(--primary);"></i> บิลวันที่ ${b.date.split(' ')[0]}</span>
-          <span style="color:var(--primary-dark)">${b.total} บ. <i class="fa-solid fa-chevron-down"></i></span>
+      <div class="hist-item">
+        <div style="display:flex; justify-content:space-between;" onclick="window.toggleBill(${idx})">
+          <span><b>#${b.billId || 'ไม่มีรหัส'}</b></span>
+          <span style="color:${b.status==='paid'?'var(--paid)':'var(--pending)'}">${b.status==='paid'?'ชำระแล้ว':'รอจ่าย'}</span>
         </div>
         <div id="detail-${idx}" class="hist-details">
-          ${b.items.map(i => `<div style="padding:4px 0;">• <b>${i.num}</b> (${i.type} ตัว) - ${i.price} บาท</div>`).join("")}
+            ${b.items.map(i => `<div>• ${i.num} - ${i.price}บ.</div>`).join("")}
+            <button class="btn-primary" style="margin-top:10px; padding:5px; font-size:12px;" onclick='window.reShowBill(${JSON.stringify(b)})'>ดูบิล/บันทึกภาพ</button>
         </div>
       </div>`).join("");
   });
 }
-
-function listenForPrizes() {
-  onValue(ref(db, 'official_prize'), (snapshot) => {
-    if(snapshot.exists()) checkWinLocally(snapshot.val());
-  });
-}
-
-function checkWinLocally(prizes) {
-  const user = localStorage.getItem("mint_user");
-  const alertBox = document.getElementById("winAlert");
-  alertBox.innerHTML = "";
-  get(ref(db, 'orders')).then(snapshot => {
-    if(snapshot.exists()){
-      Object.values(snapshot.val()).filter(o => o.user === user).forEach(b => {
-        b.items.forEach(h => {
-          let win = 0;
-          if(h.type == 2 && h.num == prizes.p2) win = h.price * payout[2];
-          if(h.type == 3 && h.num == prizes.p3) win = h.price * payout[3];
-          if(h.type == 4 && h.num == prizes.p4) win = h.price * payout[4];
-          if(h.type == 5 && h.num == prizes.p5) win = h.price * payout[5];
-          if(win > 0) alertBox.innerHTML += `<div class="win-msg"><i class="fa-solid fa-trophy"></i> ถูกรางวัล! เลข ${h.num} รับ ${win.toLocaleString()} บ.</div>`;
-        });
-      });
-    }
-  });
-}
-
-// --- แอดมินฟังก์ชัน: แยกบิล & ตรวจรางวัลรายคน ---
-window.announce = function() {
-  const res = { 
-    p2: document.getElementById("p2").value, 
-    p3: document.getElementById("p3").value, 
-    p4: document.getElementById("p4").value, 
-    p5: document.getElementById("p5").value 
-  };
-  set(ref(db, 'official_prize'), res).then(() => alert("ประกาศรางวัลสำเร็จ!"));
-};
+window.reShowBill = (b) => showDigitalBill(b);
 
 function loadAdmin() {
   onValue(ref(db, 'orders'), (snapshot) => {
     const statsBox = document.getElementById("adminOrderStats");
     if(!snapshot.exists()) return statsBox.innerText = "ยังไม่มีข้อมูล";
-    
     get(ref(db, 'official_prize')).then(prizeSnap => {
       const prizes = prizeSnap.exists() ? prizeSnap.val() : {};
-      const allOrders = snapshot.val();
-      let htmlContent = `<b style="color:var(--primary-dark); display:block; margin-bottom:10px; border-bottom:2px solid #ccfbf1;"> รายการบิลแยกรายคน</b>`;
-
-      Object.values(allOrders).reverse().forEach(order => {
-        let isWinner = false;
-        order.items.forEach(item => {
-          if ((item.type == 2 && item.num == prizes.p2) || (item.type == 3 && item.num == prizes.p3) || (item.type == 4 && item.num == prizes.p4) || (item.type == 5 && item.num == prizes.p5)) isWinner = true;
-        });
-
+      let htmlContent = `<b>รายการบิล</b>`;
+      Object.entries(snapshot.val()).reverse().forEach(([key, order]) => {
+        let isWinner = order.items.some(i => i.num == prizes[`p${i.type}`]);
         htmlContent += `
           <div class="admin-bill-card ${isWinner ? 'winner-gold' : ''}">
-            <div style="display:flex; justify-content:space-between;">
-              <b><i class="fa-solid fa-user"></i> ${order.user}</b>
-              <small>${order.date}</small>
-            </div>
-            <div style="font-size:13px; margin:8px 0;">${order.items.map(i => `• ${i.num} (${i.type}ต.) - ${i.price}บ.`).join('<br>')}</div>
-            <div style="display:flex; justify-content:space-between; border-top:1px dashed #ddd; padding-top:5px;">
-              <b>ยอด: ${order.total}</b>
-              <b style="color:${isWinner ? '#ca8a04' : '#14b8a6'}">${isWinner ? '🏆 ถูกรางวัล!' : 'รอผล'}</b>
-            </div>
+            <b>${order.user} (#${order.billId})</b><br>
+            <small>${order.buyDate}</small><br>
+            <div style="font-size:12px;">${order.items.map(i => `${i.num}(${i.type}ต.)`).join(", ")}</div>
+            <b>ยอด: ${order.total}</b> | <span>${order.status === 'paid' ? '✅ จ่ายแล้ว' : '❌ รอชำระ'}</span>
+            ${order.status === 'pending' ? `<button onclick="window.approvePaid('${key}')" style="background:var(--paid); color:white; border:none; border-radius:5px; padding:5px; margin-left:10px; cursor:pointer;">ยืนยันจ่ายเงิน</button>` : ''}
           </div>`;
       });
-
-      // สรุปรายเลข
-      let summary = {};
-      Object.values(allOrders).forEach(bill => {
-        bill.items.forEach(o => { let key = `${o.num} (${o.type} ตัว)`; summary[key] = (summary[key] || 0) + o.price; });
-      });
-      htmlContent += `<b style="color:var(--primary-dark); display:block; margin-top:20px; border-bottom:2px solid #ccfbf1;"> สรุปยอดรวมรายเลข</b>`;
-      htmlContent += Object.entries(summary).sort((a,b) => b[1] - a[1]).map(([num, total]) => `
-        <div style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #f0fdfa;"><span>เลข ${num}</span><b>${total} บาท</b></div>`).join("");
-      
       statsBox.innerHTML = htmlContent;
     });
   });
 }
 
-window.toggleBill = (idx) => {
-  const el = document.getElementById(`detail-${idx}`);
-  el.style.display = (el.style.display === "block") ? "none" : "block";
+window.approvePaid = (id) => { if(confirm("ยืนยันบิลนี้ชำระเงินแล้ว?")) update(ref(db, `orders/${id}`), { status: "paid" }); };
+window.announce = () => {
+  const res = { p2: document.getElementById("p2").value, p3: document.getElementById("p3").value, p4: document.getElementById("p4").value, p5: document.getElementById("p5").value };
+  set(ref(db, 'official_prize'), res).then(() => alert("ประกาศรางวัลสำเร็จ!"));
 };
-window.toggleHistory = () => {
-  const box = document.getElementById("historyBox");
-  box.style.display = (box.style.display === "none") ? "block" : "none";
-};
+
+function listenForPrizes() { onValue(ref(db, 'official_prize'), (s) => { if(s.exists()) checkWinLocally(s.val()); }); }
+function checkWinLocally(prizes) {
+  const user = localStorage.getItem("mint_user");
+  get(ref(db, 'orders')).then(snapshot => {
+    if(!snapshot.exists()) return;
+    document.getElementById("winAlert").innerHTML = "";
+    Object.values(snapshot.val()).filter(o => o.user === user && o.status === 'paid').forEach(b => {
+      b.items.forEach(h => {
+        if(h.num == prizes[`p${h.type}`]) document.getElementById("winAlert").innerHTML += `<div class="win-msg">🏆 ถูกรางวัล! เลข ${h.num} รับ ${(h.price * payout[h.type]).toLocaleString()} บ.</div>`;
+      });
+    });
+  });
+}
+
+window.toggleBill = (idx) => { const el = document.getElementById(`detail-${idx}`); el.style.display = (el.style.display === "block") ? "none" : "block"; };
+window.toggleHistory = () => { const box = document.getElementById("historyBox"); box.style.display = (box.style.display === "none") ? "block" : "none"; };
 </script>
 </body>
 </html>
