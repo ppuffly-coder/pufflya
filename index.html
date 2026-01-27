@@ -26,12 +26,12 @@
         .type-btn { padding: 12px 0; background: white; border: 1.5px solid #ccfbf1; border-radius: 12px; font-size: 13px; font-weight: 700; color: var(--text-muted); cursor: pointer; }
         .type-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
         
-        /* Spotify Prize Display */
+        /* Spotify Prize Display - เรียงตามหวยลาว 5->2 */
         .spotify-prize-card { background: #121212; border-radius: 20px; padding: 15px; margin-bottom: 15px; border: 1px solid #282828; }
-        .prize-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 10px; }
-        .prize-item { background: #181818; padding: 10px 5px; border-radius: 10px; border: 1px solid #333; text-align: center; }
+        .prize-row { display: grid; grid-template-columns: 1.2fr 1fr 0.8fr 0.8fr; gap: 5px; margin-top: 10px; }
+        .prize-item { background: #181818; padding: 10px 3px; border-radius: 10px; border: 1px solid #333; text-align: center; }
         .prize-label { color: #888; font-size: 10px; font-weight: bold; margin-bottom: 3px; }
-        .prize-val { color: #1DB954; font-size: 16px; font-weight: 900; letter-spacing: 1px; }
+        .prize-val { color: #1DB954; font-size: 15px; font-weight: 900; letter-spacing: 1px; }
         
         /* Winner Gold Style (Lemon-White Gradient) */
         .winner-gold { 
@@ -84,10 +84,10 @@
             <button onclick="location.reload()" style="border:none; background:#fee2e2; color:#b91c1c; padding:8px 15px; border-radius:10px; font-weight:700;">ออก</button>
         </header>
         <div class="card">
-            <b>ประกาศรางวัล</b>
+            <b>ประกาศรางวัล (เรียง 5 ไป 2)</b>
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin:15px 0;">
-                <input type="number" id="p2" placeholder="2 ตัว"> <input type="number" id="p3" placeholder="3 ตัว">
-                <input type="number" id="p4" placeholder="4 ตัว"> <input type="number" id="p5" placeholder="5 ตัว">
+                <input type="number" id="p5" placeholder="5 ตัว"> <input type="number" id="p4" placeholder="4 ตัว">
+                <input type="number" id="p3" placeholder="3 ตัว"> <input type="number" id="p2" placeholder="2 ตัว">
             </div>
             <button class="btn-primary" onclick="window.announce()">บันทึกรางวัล</button>
         </div>
@@ -102,7 +102,7 @@
 
         <div id="officialPrizeDisplay" style="display:none;">
             <div class="spotify-prize-card">
-                <div style="color:#1DB954; font-size:11px; font-weight:bold; letter-spacing:1px; text-align:left;">● LIVE ผลรางวัลล่าสุด</div>
+                <div style="color:#1DB954; font-size:11px; font-weight:bold; letter-spacing:1px; text-align:left;">● LIVE ผลรางวัล (5,4,3,2 ตัว)</div>
                 <div id="prizeNumbers" class="prize-row"></div>
             </div>
         </div>
@@ -123,10 +123,10 @@
             <div class="card">
                 <b>เลือกเลขมงคล</b>
                 <div class="type-grid">
-                    <button class="type-btn active" onclick="window.setType(2, this)">2 ตัว</button>
-                    <button class="type-btn" onclick="window.setType(3, this)">3 ตัว</button>
-                    <button class="type-btn" onclick="window.setType(4, this)">4 ตัว</button>
                     <button class="type-btn" onclick="window.setType(5, this)">5 ตัว</button>
+                    <button class="type-btn" onclick="window.setType(4, this)">4 ตัว</button>
+                    <button class="type-btn" onclick="window.setType(3, this)">3 ตัว</button>
+                    <button class="type-btn active" onclick="window.setType(2, this)">2 ตัว</button>
                 </div>
                 <div style="display:flex; gap:12px; margin-top:20px;">
                     <input type="number" id="numInput" placeholder="ใส่เลข" style="flex:2; text-align:center;">
@@ -312,11 +312,12 @@ function listenForPrizes() {
         if(s.exists()) {
             const p = s.val();
             document.getElementById("officialPrizeDisplay").style.display = "block";
+            // สลับการแสดงผลหน้า Spotify เป็น 5, 4, 3, 2
             document.getElementById("prizeNumbers").innerHTML = `
-                <div class="prize-item"><div class="prize-label">2 ตัว</div><div class="prize-val">${p.p2 || '??'}</div></div>
-                <div class="prize-item"><div class="prize-label">3 ตัว</div><div class="prize-val">${p.p3 || '???'}</div></div>
-                <div class="prize-item"><div class="prize-label">4 ตัว</div><div class="prize-val">${p.p4 || '????'}</div></div>
-                <div class="prize-item"><div class="prize-label">5 ตัว</div><div class="prize-val">${p.p5 || '????'}</div></div>
+                <div class="prize-item"><div class="prize-label">5 ตัว</div><div class="prize-val">${p.p5 || '-----'}</div></div>
+                <div class="prize-item"><div class="prize-label">4 ตัว</div><div class="prize-val">${p.p4 || '----'}</div></div>
+                <div class="prize-item"><div class="prize-label">3 ตัว</div><div class="prize-val">${p.p3 || '---'}</div></div>
+                <div class="prize-item"><div class="prize-label">2 ตัว</div><div class="prize-val">${p.p2 || '--'}</div></div>
             `;
             checkWinLocally(p);
         }
