@@ -16,7 +16,7 @@
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; background-color: var(--bg); color: var(--text-main); display: flex; justify-content: center; overflow-x: hidden; }
         .app-container { width: 100%; max-width: 420px; padding: 15px; min-height: 100vh; }
-        .card { background: var(--card-bg); border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid rgba(20, 184, 166, 0.15); box-shadow: 0 8px 20px rgba(20, 184, 166, 0.05); }
+        .card { background: var(--card-bg); border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid rgba(20, 184, 166, 0.15); box-shadow: 0 8px 20px rgba(20, 184, 166, 0.05); transition: 0.3s; }
         .btn-primary { width: 100%; padding: 14px; border: none; border-radius: 15px; background: var(--primary); color: white; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; transition: 0.3s; }
         .btn-primary:active { transform: scale(0.98); background: var(--primary-dark); }
         input { width: 100%; padding: 14px; border: 1.5px solid #e5e7eb; border-radius: 12px; font-size: 16px; outline: none; margin-bottom: 10px; transition: 0.3s; }
@@ -27,14 +27,23 @@
         .type-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
         
         /* Spotify Prize Display */
-        .spotify-prize-card { background: #121212; border-radius: 20px; padding: 15px; margin-bottom: 15px; text-align: center; border: 1px solid #282828; }
-        .prize-box { width: 40px; height: 55px; display: inline-flex; align-items: center; justify-content: center; background: #181818; color: #1DB954; border-radius: 8px; font-size: 24px; font-weight: 800; border: 2px solid #1DB954; margin: 0 4px; }
+        .spotify-prize-card { background: #121212; border-radius: 20px; padding: 15px; margin-bottom: 15px; border: 1px solid #282828; }
+        .prize-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 10px; }
+        .prize-item { background: #181818; padding: 10px 5px; border-radius: 10px; border: 1px solid #333; text-align: center; }
+        .prize-label { color: #888; font-size: 10px; font-weight: bold; margin-bottom: 3px; }
+        .prize-val { color: #1DB954; font-size: 16px; font-weight: 900; letter-spacing: 1px; }
         
-        /* Winner Gold Style */
-        .winner-gold { background: linear-gradient(135deg, #fefce8 0%, #fde047 100%) !important; border: 2px solid #eab308 !important; animation: pulse-gold 2s infinite; }
-        @keyframes pulse-gold { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+        /* Winner Gold Style (Lemon-White Gradient) */
+        .winner-gold { 
+            background: linear-gradient(135deg, #ffffff 0%, #fefce8 40%, #fde047 100%) !important; 
+            border: 2px solid #eab308 !important; 
+            animation: pulse-gold 2s infinite; 
+        }
+        @keyframes pulse-gold { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.015); } }
 
-        /* Digital Bill UI (2-Columns) */
+        .btn-line-win { display: flex; align-items: center; justify-content: center; gap: 10px; background: var(--line-green); color: white; text-decoration: none; padding: 16px; border-radius: 15px; font-weight: 800; font-size: 18px; margin-top: 15px; box-shadow: 0 4px 15px rgba(6, 199, 85, 0.3); }
+
+        /* Digital Bill UI */
         #billModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:10000; justify-content:center; align-items:center; padding:20px; }
         .digital-bill { background:white; width:100%; max-width:350px; border-radius:20px; overflow:hidden; }
         .bill-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; border-top: 1px dashed #ccc; padding-top: 10px; }
@@ -52,7 +61,8 @@
                 </div>
                 <div style="padding:20px;">
                     <div style="text-align:center; margin-bottom:15px;"><span id="mStatus" class="status-badge" style="padding:4px 12px; border-radius:50px; font-size:12px; font-weight:bold; color:white;">รอชำระเงิน</span></div>
-                    <div id="mItems"></div> <div style="display:flex; justify-content:space-between; font-size:18px; font-weight:bold; margin-top:10px;">
+                    <div id="mItems"></div> 
+                    <div style="display:flex; justify-content:space-between; font-size:18px; font-weight:bold; margin-top:10px;">
                         <span>ยอดรวม</span><span style="color:var(--primary);" id="mTotal">0 บาท</span>
                     </div>
                     <div style="margin-top:15px; font-size:11px; color:#888;">
@@ -92,8 +102,8 @@
 
         <div id="officialPrizeDisplay" style="display:none;">
             <div class="spotify-prize-card">
-                <div style="color:#1DB954; font-size:12px; font-weight:bold; margin-bottom:10px;">● LIVE ผลรางวัลล่าสุด</div>
-                <div id="prizeNumbers"></div>
+                <div style="color:#1DB954; font-size:11px; font-weight:bold; letter-spacing:1px; text-align:left;">● LIVE ผลรางวัลล่าสุด</div>
+                <div id="prizeNumbers" class="prize-row"></div>
             </div>
         </div>
 
@@ -109,6 +119,7 @@
 
         <div id="mainApp" style="display:none;">
             <div id="winAlert"></div>
+            
             <div class="card">
                 <b>เลือกเลขมงคล</b>
                 <div class="type-grid">
@@ -141,19 +152,20 @@
         </div>
     </div>
 </div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getDatabase, ref, set, push, onValue, get, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAT48SVlLZGo_XEYmf_K4MD06GqDLa_N9c",
-  authDomain: "puffly-86e43.firebaseapp.com",
-  projectId: "puffly-86e43",
-  storageBucket: "puffly-86e43.firebasestorage.app",
-  messagingSenderId: "841845436320",
-  appId: "1:841845436320:web:61e2ff1988c48bc634fec5",
-  measurementId: "G-BRQ9YTPR1V",
-  databaseURL: "https://puffly-86e43-default-rtdb.asia-southeast1.firebasedatabase.app"
+    apiKey: "AIzaSyAT48SVlLZGo_XEYmf_K4MD06GqDLa_N9c",
+    authDomain: "puffly-86e43.firebaseapp.com",
+    projectId: "puffly-86e43",
+    storageBucket: "puffly-86e43.firebasestorage.app",
+    messagingSenderId: "841845436320",
+    appId: "1:841845436320:web:61e2ff1988c48bc634fec5",
+    measurementId: "G-BRQ9YTPR1V",
+    databaseURL: "https://puffly-86e43-default-rtdb.asia-southeast1.firebasedatabase.app"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -164,7 +176,6 @@ const payout = { 2: 90, 3: 800, 4: 5000, 5: 30000 };
 const limits = { 2: 5000, 3: 2000, 4: 500, 5: 200 };
 const LINE_URL = "https://lin.ee/Mm1caQx";
 
-// --- Logic คำนวณงวดวันที่ ---
 function getNextDrawDate() {
     const now = new Date();
     const day = now.getDay(); const hour = now.getHours(); const minute = now.getMinutes();
@@ -180,75 +191,72 @@ function getNextDrawDate() {
     return drawDate.toLocaleDateString('th-TH');
 }
 
-// --- ระบบ Login ---
 window.handleLogin = function() {
-  const name = document.getElementById("username").value.trim();
-  const phone = document.getElementById("userphone").value.trim();
-  if (name.toLowerCase() === "admin") {
-    document.getElementById("userPanel").style.display = "none";
-    document.getElementById("adminPanel").style.display = "block";
-    loadAdmin(); return;
-  }
-  if (!name || phone.length < 10) return alert("กรุณาระบุชื่อและเบอร์โทรให้ครบถ้วน");
-  localStorage.setItem("mint_user", `${name} (${phone})`);
-  document.getElementById("loginBox").style.display = "none";
-  document.getElementById("mainApp").style.display = "block";
-  document.getElementById("appHeader").style.display = "flex";
-  window.renderPad(); loadHistory(); listenForPrizes();
+    const name = document.getElementById("username").value.trim();
+    const phone = document.getElementById("userphone").value.trim();
+    if (name.toLowerCase() === "admin") {
+        document.getElementById("userPanel").style.display = "none";
+        document.getElementById("adminPanel").style.display = "block";
+        loadAdmin(); return;
+    }
+    if (!name || phone.length < 10) return alert("กรุณาระบุชื่อและเบอร์โทรให้ครบถ้วน");
+    localStorage.setItem("mint_user", `${name} (${phone})`);
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("mainApp").style.display = "block";
+    document.getElementById("appHeader").style.display = "flex";
+    window.renderPad(); loadHistory(); listenForPrizes();
 };
 
-// --- Numpad & Cart ---
 window.renderPad = function() {
-  const box = document.getElementById("numpad"); box.innerHTML = "";
-  for(let i=0; i<10; i++) {
-    const d = document.createElement("div"); d.className="num-key"; d.innerText=i;
-    d.onclick=() => { if(document.getElementById("numInput").value.length < type) document.getElementById("numInput").value += i; };
-    box.appendChild(d);
-  }
+    const box = document.getElementById("numpad"); box.innerHTML = "";
+    for(let i=0; i<10; i++) {
+        const d = document.createElement("div"); d.className="num-key"; d.innerText=i;
+        d.onclick=() => { if(document.getElementById("numInput").value.length < type) document.getElementById("numInput").value += i; };
+        box.appendChild(d);
+    }
 };
 
 window.setType = function(t, el) {
-  type = t;
-  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active'); document.getElementById("numInput").value = "";
+    type = t;
+    document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active'); document.getElementById("numInput").value = "";
 };
 
 window.addToBill = async function() {
-  const num = document.getElementById("numInput").value;
-  const price = parseInt(document.getElementById("priceInput").value);
-  if(num.length !== type || price < 5) return alert("ขั้นต่ำ 5 บาท และเลขต้องครบหลัก");
-  const snapshot = await get(ref(db, 'orders'));
-  let currentTotal = 0;
-  if(snapshot.exists()) {
-    Object.values(snapshot.val()).forEach(bObj => {
-      if(bObj.items) bObj.items.forEach(item => {
-        if(item.num === num && item.type === type) currentTotal += parseInt(item.price);
-      });
-    });
-  }
-  if ((currentTotal + price) > limits[type]) return alert(`เต็มแล้ว! รับได้อีก ${limits[type] - currentTotal} บ.`);
-  bill.push({ num, price, type });
-  document.getElementById("numInput").value = "";
-  document.getElementById("currentBillCard").style.display = "block";
-  renderBill();
+    const num = document.getElementById("numInput").value;
+    const price = parseInt(document.getElementById("priceInput").value);
+    if(num.length !== type || price < 5) return alert("ขั้นต่ำ 5 บาท และเลขต้องครบหลัก");
+    const snapshot = await get(ref(db, 'orders'));
+    let currentTotal = 0;
+    if(snapshot.exists()) {
+        Object.values(snapshot.val()).forEach(bObj => {
+            if(bObj.items) bObj.items.forEach(item => {
+                if(item.num === num && item.type === type) currentTotal += parseInt(item.price);
+            });
+        });
+    }
+    if ((currentTotal + price) > limits[type]) return alert(`เต็มแล้ว! รับได้อีก ${limits[type] - currentTotal} บ.`);
+    bill.push({ num, price, type });
+    document.getElementById("numInput").value = "";
+    document.getElementById("currentBillCard").style.display = "block";
+    renderBill();
 };
 
 function renderBill() {
-  const box = document.getElementById("currentBill");
-  let total = 0; box.innerHTML = "";
-  bill.forEach((item, idx) => {
-    total += item.price;
-    box.innerHTML += `<div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #eee;">
-      <span><b>${item.num}</b> (${item.type}ต.)</span>
-      <span>${item.price} บ. <i class="fa-solid fa-trash" style="color:red; margin-left:10px;" onclick="window.removeFromBill(${idx})"></i></span>
-    </div>`;
-  });
-  document.getElementById("billTotal").innerText = `ยอดรวม: ${total} บาท`;
+    const box = document.getElementById("currentBill");
+    let total = 0; box.innerHTML = "";
+    bill.forEach((item, idx) => {
+        total += item.price;
+        box.innerHTML += `<div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #eee;">
+            <span><b>${item.num}</b> (${item.type}ต.)</span>
+            <span>${item.price} บ. <i class="fa-solid fa-trash" style="color:red; margin-left:10px;" onclick="window.removeFromBill(${idx})"></i></span>
+        </div>`;
+    });
+    document.getElementById("billTotal").innerText = `ยอดรวม: ${total} บาท`;
 }
 
 window.removeFromBill = (idx) => { bill.splice(idx, 1); if(bill.length === 0) document.getElementById("currentBillCard").style.display = "none"; renderBill(); };
 
-// --- บิลดิจิทัล 2 ฝั่ง & บันทึกภาพ ---
 function showDigitalBill(b) {
     document.getElementById("mBillId").innerText = `#${b.billId}`;
     document.getElementById("mStatus").innerText = b.status === 'paid' ? 'ชำระเงินแล้ว' : 'รอชำระเงิน';
@@ -257,7 +265,6 @@ function showDigitalBill(b) {
     document.getElementById("mBuyDate").innerText = b.buyDate;
     document.getElementById("mDrawDate").innerText = b.drawDate;
     
-    // แบ่ง 2 คอลัมน์
     const half = Math.ceil(b.items.length / 2);
     const leftCol = b.items.slice(0, half);
     const rightCol = b.items.slice(half);
@@ -281,98 +288,123 @@ window.saveBillImage = function() {
 };
 
 window.checkout = function() {
-  if(bill.length === 0) return;
-  const user = localStorage.getItem("mint_user");
-  const billId = "RM-" + Date.now().toString().slice(-6);
-  const newBill = {
-    billId, user, items: [...bill], total: bill.reduce((s, i) => s + i.price, 0),
-    buyDate: new Date().toLocaleString('th-TH'), drawDate: getNextDrawDate(),
-    status: "pending", timestamp: Date.now()
-  };
-  push(ref(db, 'orders'), newBill).then(() => {
-    showDigitalBill(newBill); window.open(LINE_URL, "_blank");
-    bill = []; document.getElementById("currentBillCard").style.display = "none";
-  });
+    if(bill.length === 0) return;
+    const user = localStorage.getItem("mint_user");
+    const billId = "RM-" + Date.now().toString().slice(-6);
+    const newBill = {
+        billId, user, items: [...bill], total: bill.reduce((s, i) => s + i.price, 0),
+        buyDate: new Date().toLocaleString('th-TH'), drawDate: getNextDrawDate(),
+        status: "pending", timestamp: Date.now()
+    };
+    push(ref(db, 'orders'), newBill).then(() => {
+        showDigitalBill(newBill); window.open(LINE_URL, "_blank");
+        bill = []; document.getElementById("currentBillCard").style.display = "none";
+    });
 };
 
-// --- ประกาศรางวัล & ตรวจรางวัล ---
 window.announce = () => {
-  const res = { p2: document.getElementById("p2").value, p3: document.getElementById("p3").value, p4: document.getElementById("p4").value, p5: document.getElementById("p5").value };
-  set(ref(db, 'official_prize'), res).then(() => alert("ประกาศรางวัลสำเร็จ!"));
+    const res = { p2: document.getElementById("p2").value, p3: document.getElementById("p3").value, p4: document.getElementById("p4").value, p5: document.getElementById("p5").value };
+    set(ref(db, 'official_prize'), res).then(() => alert("ประกาศรางวัลสำเร็จ!"));
 };
 
 function listenForPrizes() { 
     onValue(ref(db, 'official_prize'), (s) => { 
         if(s.exists()) {
             const p = s.val();
-            const display = document.getElementById("officialPrizeDisplay");
-            display.style.display = "block";
-            // โชว์เลข 2 ตัวเป็นตัวอย่างในหน้า Spotify
-            document.getElementById("prizeNumbers").innerHTML = (p.p2 || "??").split('').map(n => `<div class="prize-box">${n}</div>`).join("");
+            document.getElementById("officialPrizeDisplay").style.display = "block";
+            document.getElementById("prizeNumbers").innerHTML = `
+                <div class="prize-item"><div class="prize-label">2 ตัว</div><div class="prize-val">${p.p2 || '??'}</div></div>
+                <div class="prize-item"><div class="prize-label">3 ตัว</div><div class="prize-val">${p.p3 || '???'}</div></div>
+                <div class="prize-item"><div class="prize-label">4 ตัว</div><div class="prize-val">${p.p4 || '????'}</div></div>
+                <div class="prize-item"><div class="prize-label">5 ตัว</div><div class="prize-val">${p.p5 || '????'}</div></div>
+            `;
             checkWinLocally(p);
         }
     }); 
 }
 
 function checkWinLocally(prizes) {
-  const user = localStorage.getItem("mint_user");
-  const alertBox = document.getElementById("winAlert");
-  get(ref(db, 'orders')).then(snapshot => {
-    if(!snapshot.exists()) return;
-    alertBox.innerHTML = ""; let won = false;
-    Object.values(snapshot.val()).filter(o => o.user === user && o.status === 'paid').forEach(b => {
-      b.items.forEach(h => {
-        if(h.num == prizes[`p${h.type}`]) {
-          won = true;
-          alertBox.innerHTML += `<div class="win-msg">🏆 ถูกรางวัล! เลข ${h.num} รับ ${(h.price * payout[h.type]).toLocaleString()} บ.</div>`;
+    const user = localStorage.getItem("mint_user");
+    const alertBox = document.getElementById("winAlert");
+    get(ref(db, 'orders')).then(snapshot => {
+        if(!snapshot.exists()) return;
+        alertBox.innerHTML = "";
+        let totalWin = 0;
+        let winDetails = [];
+        
+        Object.values(snapshot.val()).filter(o => o.user === user && o.status === 'paid').forEach(b => {
+            b.items.forEach(h => {
+                if(h.num == prizes[`p${h.type}`]) {
+                    const winAmount = h.price * payout[h.type];
+                    totalWin += winAmount;
+                    winDetails.push(`✅ ถูก ${h.type} ตัว: <b>${h.num}</b> (รับ ${winAmount.toLocaleString()} บ.)`);
+                }
+            });
+        });
+
+        if(totalWin > 0) {
+            alertBox.innerHTML = `
+                <div class="card winner-gold" style="text-align:center; padding:25px;">
+                    <div style="font-size:45px; margin-bottom:10px;">🏆</div>
+                    <h2 style="margin:0; color:#b45309; font-weight:900;">ยินดีด้วยคุณถูกรางวัล!</h2>
+                    <div style="text-align:left; color:#1f2937; font-size:14px; margin:15px 0; padding-top:10px; border-top:1px dashed rgba(180, 83, 9, 0.2);">
+                        ${winDetails.join('<br>')}
+                    </div>
+                    <div style="font-size:22px; font-weight:900; color:#166534; background:rgba(255,255,255,0.5); padding:10px; border-radius:12px;">ยอดเงินรางวัล: ${totalWin.toLocaleString()} บาท</div>
+                    <a href="${LINE_URL}" target="_blank" class="btn-line-win">
+                        <i class="fa-brands fa-line"></i> แจ้งถอนเงินรางวัลทันที
+                    </a>
+                </div>`;
         }
-      });
     });
-    if(won) alertBox.innerHTML += `<a href="${LINE_URL}" target="_blank" class="btn-line-contact"><i class="fa-brands fa-line"></i> แจ้งรับรางวัลกับแอดมิน</a>`;
-  });
 }
 
-// --- แอดมิน (บิลทองเลม่อน) ---
 function loadAdmin() {
-  onValue(ref(db, 'orders'), (snapshot) => {
-    const statsBox = document.getElementById("adminOrderStats");
-    if(!snapshot.exists()) return statsBox.innerText = "ยังไม่มีข้อมูล";
-    get(ref(db, 'official_prize')).then(prizeSnap => {
-      const prizes = prizeSnap.exists() ? prizeSnap.val() : {};
-      statsBox.innerHTML = Object.entries(snapshot.val()).reverse().map(([key, order]) => {
-        let isWinner = order.items.some(i => i.num == prizes[`p${i.type}`]);
-        return `
-          <div class="card ${isWinner ? 'winner-gold' : ''}" style="padding:15px; margin-bottom:10px;">
-            <div style="display:flex; justify-content:space-between;">
-                <b>${order.user}</b> <b style="color:var(--primary-dark);">${order.total}฿</b>
-            </div>
-            <div style="font-size:11px; color:#666;">#${order.billId} | ${order.buyDate}</div>
-            <div style="margin-top:10px; display:flex; gap:5px;">
-                <button onclick='window.reShowBill(${JSON.stringify(order)})' style="flex:1; padding:5px; border-radius:8px; border:1px solid #ccc; background:white;">ดูบิล</button>
-                ${order.status === 'pending' ? `<button onclick="window.approvePaid('${key}')" style="flex:1; background:var(--paid); color:white; border:none; border-radius:8px;">ยืนยันจ่าย</button>` : '<span style="color:var(--paid); font-weight:bold; padding:5px;">✅ จ่ายแล้ว</span>'}
-            </div>
-            ${isWinner ? '<div style="color:#b45309; font-weight:bold; text-align:center; margin-top:5px;">🏆 บิลถูกรางวัล!</div>' : ''}
-          </div>`;
-      }).join("");
+    onValue(ref(db, 'orders'), (snapshot) => {
+        const statsBox = document.getElementById("adminOrderStats");
+        if(!snapshot.exists()) return statsBox.innerText = "ยังไม่มีข้อมูล";
+        get(ref(db, 'official_prize')).then(prizeSnap => {
+            const prizes = prizeSnap.exists() ? prizeSnap.val() : {};
+            statsBox.innerHTML = Object.entries(snapshot.val()).reverse().map(([key, order]) => {
+                let isWinner = order.items.some(i => i.num == prizes[`p${i.type}`]);
+                return `
+                    <div class="card ${isWinner ? 'winner-gold' : ''}" style="padding:15px; margin-bottom:10px;">
+                        <div style="display:flex; justify-content:space-between;">
+                            <b>${order.user}</b> <b style="color:var(--primary-dark);">${order.total}฿</b>
+                        </div>
+                        <div style="font-size:11px; color:#666;">#${order.billId} | ${order.buyDate}</div>
+                        <div style="margin-top:10px; display:flex; gap:5px;">
+                            <button onclick='window.reShowBill(${JSON.stringify(order)})' style="flex:1; padding:5px; border-radius:8px; border:1px solid #ccc; background:white;">ดูบิล</button>
+                            ${order.status === 'pending' ? `<button onclick="window.approvePaid('${key}')" style="flex:1; background:var(--paid); color:white; border:none; border-radius:8px;">ยืนยันจ่าย</button>` : '<span style="color:var(--paid); font-weight:bold; padding:5px;">✅ จ่ายแล้ว</span>'}
+                        </div>
+                        ${isWinner ? '<div style="color:#b45309; font-weight:bold; text-align:center; margin-top:5px;">🏆 บิลถูกรางวัล!</div>' : ''}
+                    </div>`;
+            }).join("");
+        });
     });
-  });
 }
 
 window.approvePaid = (id) => { if(confirm("ยืนยันการชำระเงิน?")) update(ref(db, `orders/${id}`), { status: "paid" }); };
 
 function loadHistory() {
-  const user = localStorage.getItem("mint_user");
-  onValue(ref(db, 'orders'), (snapshot) => {
-    const box = document.getElementById("historyList");
-    if(!snapshot.exists()) return box.innerHTML = "ไม่มีประวัติ";
-    const myOrders = Object.values(snapshot.val()).filter(o => o.user === user).reverse();
-    box.innerHTML = myOrders.map(b => `
-      <div class="hist-item" onclick='window.reShowBill(${JSON.stringify(b)})' style="cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
-        <div><b>#${b.billId}</b><br><small>${b.buyDate}</small></div>
-        <div style="text-align:right;"><b style="color:var(--primary);">${b.total}฿</b><br>
-        <span style="font-size:12px; color:${b.status==='paid'?'var(--paid)':'var(--pending)'}">${b.status==='paid'?'ชำระแล้ว':'รอจ่าย'}</span></div>
-      </div>`).join("");
-  });
+    const user = localStorage.getItem("mint_user");
+    onValue(ref(db, 'orders'), (snapshot) => {
+        const box = document.getElementById("historyList");
+        if(!snapshot.exists()) return box.innerHTML = "ไม่มีประวัติ";
+        get(ref(db, 'official_prize')).then(prizeSnap => {
+            const prizes = prizeSnap.exists() ? prizeSnap.val() : {};
+            const myOrders = Object.values(snapshot.val()).filter(o => o.user === user).reverse();
+            box.innerHTML = myOrders.map(b => {
+                let isWinner = b.status === 'paid' && b.items.some(i => i.num == prizes[`p${i.type}`]);
+                return `
+                <div class="hist-item ${isWinner ? 'winner-gold' : ''}" onclick='window.reShowBill(${JSON.stringify(b)})' style="cursor:pointer; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; padding: 12px 10px; border-radius:12px; margin-bottom:5px;">
+                    <div><b>#${b.billId}</b><br><small>${b.buyDate}</small></div>
+                    <div style="text-align:right;"><b style="color:var(--primary);">${b.total}฿</b><br>
+                    <span style="font-size:12px; color:${b.status==='paid'?'var(--paid)':'var(--pending)'}">${b.status==='paid'?'ชำระแล้ว':'รอจ่าย'}</span></div>
+                </div>`;
+            }).join("");
+        });
+    });
 }
 
 window.reShowBill = (b) => showDigitalBill(b);
