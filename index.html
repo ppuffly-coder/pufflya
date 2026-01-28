@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Rich Mint - Premium Lottery System</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#14b8a6">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Rich Mint">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135706.png">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
@@ -12,63 +20,66 @@
             --primary: #14b8a6; --primary-dark: #0d9488; --bg: #f0fdfa; 
             --card-bg: #ffffff; --text-main: #1f2937; --text-muted: #6b7280; 
             --line-green: #06C755; --pending: #f59e0b; --paid: #10b981;
-            /* เพิ่มสีมิ้นต์และเลม่อน */
-            --mint-light: #a7f3d0;
-            --lemon-light: #fef08a;
+            --mint-light: #a7f3d0; --lemon-light: #fef08a;
         }
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; background-color: var(--bg); color: var(--text-main); display: flex; justify-content: center; overflow-x: hidden; scroll-behavior: smooth; }
         .app-container { width: 100%; max-width: 420px; padding: 15px; min-height: 100vh; }
+        
+        /* สไตล์กล่องแจ้งเตือนติดตั้งแอป */
+        #installBanner {
+            display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 380px; background: white; padding: 15px; border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 10001; border: 2px solid var(--primary);
+            align-items: center; gap: 15px; animation: slideUp 0.5s ease-out;
+        }
+        @keyframes slideUp { from { bottom: -100px; opacity: 0; } to { bottom: 20px; opacity: 1; } }
+
         .card { background: var(--card-bg); border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid rgba(20, 184, 166, 0.15); box-shadow: 0 8px 20px rgba(20, 184, 166, 0.05); transition: 0.3s; }
         .btn-primary { width: 100%; padding: 14px; border: none; border-radius: 15px; background: var(--primary); color: white; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; transition: 0.3s; }
         .btn-primary:active { transform: scale(0.98); background: var(--primary-dark); }
         input { width: 100%; padding: 14px; border: 1.5px solid #e5e7eb; border-radius: 12px; font-size: 16px; outline: none; margin-bottom: 10px; transition: 0.3s; }
+        
+        /* Numpad & Grid */
         .numpad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 15px 0; }
         .num-key { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; background: white; border: 1px solid #ccfbf1; border-radius: 12px; font-weight: 800; color: var(--primary-dark); cursor: pointer; }
         .type-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
         .type-btn { padding: 12px 0; background: white; border: 1.5px solid #ccfbf1; border-radius: 12px; font-size: 13px; font-weight: 700; color: var(--text-muted); cursor: pointer; }
         .type-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
-        
+
+        /* Spotify Prize Design */
         .spotify-prize-card { background: #121212; border-radius: 20px; padding: 15px; margin-bottom: 15px; border: 1px solid #282828; }
         .prize-row { display: grid; grid-template-columns: 1.2fr 1fr 0.8fr 0.8fr; gap: 5px; margin-top: 10px; }
         .prize-item { background: #181818; padding: 10px 3px; border-radius: 10px; border: 1px solid #333; text-align: center; }
         .prize-label { color: #888; font-size: 10px; font-weight: bold; margin-bottom: 3px; }
         .prize-val { color: #1DB954; font-size: 15px; font-weight: 900; letter-spacing: 1px; }
 
-        .payout-card { background: #fff; border-radius: 15px; padding: 12px; border: 1px solid #e2e8f0; margin-bottom: 15px; }
-        .payout-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .payout-item { display: flex; justify-content: space-between; padding: 8px 12px; background: #f8fafc; border-radius: 10px; font-size: 13px; }
-        .payout-item b { color: var(--primary-dark); }
-        
-        @keyframes bounceIn { 0% { transform: scale(0.95); opacity: 0; } 70% { transform: scale(1.02); opacity: 1; } 100% { transform: scale(1); } }
-        .bill-active { animation: bounceIn 0.4s ease-out; border: 2.5px solid var(--primary) !important; }
-
-        .winner-gold { background: linear-gradient(135deg, #ffffff 0%, #fffbeb 50%, #fef3c7 100%) !important; border: 2px solid #fbbf24 !important; }
-        .btn-line-win { display: flex; align-items: center; justify-content: center; gap: 10px; background: var(--line-green); color: white; text-decoration: none; padding: 16px; border-radius: 15px; font-weight: 800; font-size: 18px; margin-top: 15px; box-shadow: 0 10px 20px rgba(6, 199, 85, 0.3); transition: 0.3s; border: 2px solid rgba(255,255,255,0.2); }
-
-        .admin-btn-view { background: #f1f5f9; color: #475569; border: 1.5px solid #e2e8f0; padding: 10px 15px; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
-        .admin-btn-approve { background: var(--paid); color: white; border: none; padding: 10px 15px; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; transition: 0.2s; flex: 1; }
-
-        /* BILL DESIGN UPDATED - เขียวมิ้นต์ & เหลืองเลม่อน */
+        /* Bill Design */
         #billModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:10000; justify-content:center; align-items:center; padding:20px; }
         .digital-bill { 
             background: linear-gradient(135deg, #a7f3d0 0%, #fef08a 100%); 
             width:100%; max-width:350px; border-radius:35px; overflow:hidden; 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.2); 
-            color: #065f46; padding-bottom: 25px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2); color: #065f46; padding-bottom: 25px;
         }
         .bill-header-area { padding: 30px 20px 10px; text-align: center; }
-        .bill-body-card { 
-            background: rgba(255, 255, 255, 0.4); 
-            margin: 10px 20px; padding: 20px; border-radius: 25px; 
-            backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.5);
-        }
+        .bill-body-card { background: rgba(255, 255, 255, 0.4); margin: 10px 20px; padding: 20px; border-radius: 25px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.5); }
         .bill-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; border-bottom: 1px dashed rgba(6, 95, 70, 0.2); padding-bottom: 15px; margin-bottom: 15px; }
         .bill-col-item { display: flex; justify-content: space-between; font-size: 14px; background: rgba(255, 255, 255, 0.5); padding: 6px 10px; border-radius: 12px; margin-bottom: 4px; color: #065f46; font-weight: 700; }
-        #mStatus { padding: 6px 20px; border-radius: 50px; font-size: 14px; font-weight: 800; color: white; display: inline-block; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        #mStatus { padding: 6px 20px; border-radius: 50px; font-size: 14px; font-weight: 800; color: white; display: inline-block; margin-bottom: 10px; }
+        .winner-gold { background: linear-gradient(135deg, #ffffff 0%, #fffbeb 50%, #fef3c7 100%) !important; border: 2px solid #fbbf24 !important; }
     </style>
 </head>
 <body>
+
+<div id="installBanner">
+    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135706.png" width="50" height="50" style="border-radius:12px;">
+    <div style="flex:1;">
+        <b style="font-size:14px;">ติดตั้ง Rich Mint</b><br>
+        <small style="color:var(--text-muted);">ใช้งานสะดวกผ่านหน้าจอโฮม</small>
+    </div>
+    <button onclick="installApp()" style="background:var(--primary); color:white; border:none; padding:8px 15px; border-radius:10px; font-weight:bold;">ติดตั้ง</button>
+</div>
+
 <div class="app-container">
     <div id="billModal">
         <div style="display:flex; flex-direction:column; align-items:center; width:100%;">
@@ -102,14 +113,13 @@
             <button onclick="location.reload()" style="border:none; background:#fee2e2; color:#ef4444; padding:8px 15px; border-radius:12px; font-weight:700;">ออก</button>
         </header>
         <div class="card">
-            <b style="font-size:16px;">ประกาศรางวัล (5 ไป 2)</b>
+            <b>ประกาศรางวัล (5 ไป 2)</b>
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin:15px 0;">
                 <input type="number" id="p5" placeholder="5 ตัว"> <input type="number" id="p4" placeholder="4 ตัว">
                 <input type="number" id="p3" placeholder="3 ตัว"> <input type="number" id="p2" placeholder="2 ตัว">
             </div>
             <button class="btn-primary" onclick="window.announce()">บันทึกผลรางวัล</button>
         </div>
-        <div style="margin-bottom: 10px;"><b>รายการบิลทั้งหมด</b></div>
         <div id="adminOrderStats"></div>
     </div>
 
@@ -118,31 +128,42 @@
             <div style="font-size:24px; font-weight:900; color:var(--primary);"><i class="fa-solid fa-coins"></i> Rich Mint</div>
             <button onclick="window.toggleHistory()" style="background:white; border:2px solid var(--primary); color:var(--primary); padding:8px 18px; border-radius:12px; font-weight:800;">ประวัติ</button>
         </header>
+        
         <div id="officialPrizeDisplay" style="display:none;">
             <div class="spotify-prize-card">
                 <div style="color:#1DB954; font-size:11px; font-weight:bold; letter-spacing:1px;">● LIVE ผลรางวัล</div>
                 <div id="prizeNumbers" class="prize-row"></div>
             </div>
         </div>
+
         <div id="loginBox">
             <div class="card" style="text-align:center; padding:40px 20px;">
                 <div style="font-size:64px; color:var(--primary); margin-bottom:20px;"><i class="fa-solid fa-circle-user"></i></div>
-                <h2 style="margin:0;">เข้าสู่ระบบ</h2>
-                <input type="text" id="username" placeholder="ระบุชื่อของคุณ" style="margin-top:20px;">
+                <h2>เข้าสู่ระบบ</h2>
+                <input type="text" id="username" placeholder="ระบุชื่อของคุณ">
                 <input type="number" id="userphone" placeholder="ระบุเบอร์โทรศัพท์ 10 หลัก">
                 <button class="btn-primary" onclick="window.handleLogin()">เริ่มต้นใช้งาน</button>
             </div>
         </div>
+
         <div id="mainApp" style="display:none;">
             <div id="winAlert"></div>
-            <div class="payout-card"><div class="payout-row"><div class="payout-item">5 ตัว <b>x30,000</b></div><div class="payout-item">4 ตัว <b>x5,000</b></div><div class="payout-item">3 ตัว <b>x800</b></div><div class="payout-item">2 ตัว <b>x90</b></div></div></div>
             <div class="card">
                 <b>เลือกเลขมงคล</b>
-                <div class="type-grid"><button class="type-btn" onclick="window.setType(5, this)">5 ตัว</button><button class="type-btn" onclick="window.setType(4, this)">4 ตัว</button><button class="type-btn" onclick="window.setType(3, this)">3 ตัว</button><button class="type-btn active" onclick="window.setType(2, this)">2 ตัว</button></div>
-                <div style="display:flex; gap:12px; margin-top:20px;"><input type="number" id="numInput" placeholder="ใส่เลข" style="flex:2; text-align:center;"><input type="number" id="priceInput" value="5" style="flex:1; text-align:center;"></div>
+                <div class="type-grid">
+                    <button class="type-btn" onclick="window.setType(5, this)">5 ตัว</button>
+                    <button class="type-btn" onclick="window.setType(4, this)">4 ตัว</button>
+                    <button class="type-btn" onclick="window.setType(3, this)">3 ตัว</button>
+                    <button class="type-btn active" onclick="window.setType(2, this)">2 ตัว</button>
+                </div>
+                <div style="display:flex; gap:12px; margin-top:20px;">
+                    <input type="number" id="numInput" placeholder="ใส่เลข" style="flex:2; text-align:center;">
+                    <input type="number" id="priceInput" value="5" style="flex:1; text-align:center;">
+                </div>
                 <div class="numpad" id="numpad"></div>
                 <button class="btn-primary" onclick="window.addToBill()">เพิ่มลงในบิล</button>
             </div>
+            
             <div class="card" id="currentBillCard" style="display:none;">
                 <b>บิลปัจจุบัน</b>
                 <div id="currentBill" style="margin:15px 0;"></div>
@@ -173,6 +194,30 @@ const payout = { 2: 90, 3: 800, 4: 5000, 5: 30000 };
 const limits = { 2: 5000, 3: 2000, 4: 500, 5: 200 };
 const LINE_URL = "https://lin.ee/Mm1caQx";
 
+// --- PWA Service Worker Registration ---
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').then(reg => console.log('SW Registered'));
+    });
+}
+
+// --- Install App Logic ---
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById('installBanner').style.display = 'flex';
+});
+
+window.installApp = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') document.getElementById('installBanner').style.display = 'none';
+    deferredPrompt = null;
+};
+
+// --- App Functions ---
 function getNextDrawDate() {
     const now = new Date(); const day = now.getDay(); const hour = now.getHours();
     const currentTime = (hour * 100) + now.getMinutes();
@@ -185,17 +230,14 @@ function getNextDrawDate() {
     return drawDate.toLocaleDateString('th-TH');
 }
 
-// --- จุดแก้ไขการเข้าหน้าแอดมินตามที่สั่ง ---
 window.handleLogin = function() {
     const name = document.getElementById("username").value.trim();
     const phone = document.getElementById("userphone").value.trim();
-    
     if (name.toLowerCase() === "admin77457017") {
         document.getElementById("userPanel").style.display = "none";
         document.getElementById("adminPanel").style.display = "block";
         loadAdmin(); return;
     }
-    
     if (!name || phone.length < 10) return alert("กรุณาระบุชื่อและเบอร์โทรให้ครบถ้วน");
     localStorage.setItem("mint_user", `${name} (${phone})`);
     document.getElementById("loginBox").style.display = "none";
@@ -314,7 +356,7 @@ function checkWinLocally(prizes) {
             b.items.forEach(h => { if(h.num == prizes[`p${h.type}`]) { totalWin += (h.price * payout[h.type]); winDetails.push(`ถูก <b>${h.type} ตัว</b> เลข <b>${h.num}</b>`); } });
         });
         if(totalWin > 0) {
-            alertBox.innerHTML = `<div class="card winner-gold" style="text-align:center; padding: 25px;"><h2 style="margin:0; color: #92400e;">ยินดีด้วย! คุณถูกรางวัล</h2><div style="font-size:14px; margin:15px 0; color: #b45309;">${winDetails.join('<br>')}</div><div style="background: white; padding: 15px; border-radius: 12px; margin-bottom: 10px;"><span style="font-size:28px; font-weight:900; color:#166534;">${totalWin.toLocaleString()} บาท</span></div><a href="${LINE_URL}" target="_blank" class="btn-line-win">แจ้งถอนเงินรางวัล</a></div>`;
+            alertBox.innerHTML = `<div class="card winner-gold" style="text-align:center; padding: 25px;"><h2 style="margin:0; color: #92400e;">ยินดีด้วย! คุณถูกรางวัล</h2><div style="font-size:14px; margin:15px 0; color: #b45309;">${winDetails.join('<br>')}</div><div style="background: white; padding: 15px; border-radius: 12px; margin-bottom: 10px;"><span style="font-size:28px; font-weight:900; color:#166534;">${totalWin.toLocaleString()} บาท</span></div><a href="${LINE_URL}" target="_blank" class="btn-line-win" style="background:var(--line-green); color:white; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:10px; padding:15px; border-radius:15px; font-weight:bold;">แจ้งถอนเงินรางวัล</a></div>`;
         }
     });
 }
@@ -333,9 +375,9 @@ function loadAdmin() {
                         <b style="font-size:18px; color:var(--primary-dark);">${order.total}฿</b>
                     </div>
                     <div style="margin-top:12px; display:flex; gap:8px;">
-                        <button onclick='window.reShowBill(${JSON.stringify(order)})' class="admin-btn-view">ดูบิล</button>
+                        <button onclick='window.reShowBill(${JSON.stringify(order)})' style="flex:1; padding:8px; border-radius:10px; border:1px solid #ccc;">ดูบิล</button>
                         ${order.status === 'pending' ? 
-                            `<button onclick="window.approvePaid('${key}')" class="admin-btn-approve">ยืนยันจ่ายเงิน</button>` : 
+                            `<button onclick="window.approvePaid('${key}')" style="flex:1; background:var(--paid); color:white; border:none; border-radius:10px; font-weight:bold;">อนุมัติ</button>` : 
                             `<span style="color:var(--paid); font-weight:bold; flex:1; text-align:center;">จ่ายแล้ว</span>`
                         }
                     </div>
