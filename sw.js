@@ -1,5 +1,18 @@
-// sw.js
-self.addEventListener('fetch', (event) => {
-  // โค้ดส่วนนี้ช่วยให้แอปทำงานได้เสถียรขึ้น
-  // และจำเป็นสำหรับเบราว์เซอร์บางเวอร์ชันในการแสดงหน้าต่างติดตั้ง
+const CACHE_NAME = 'rich-mint-v1';
+const assets = ['./', './index.html'];
+
+self.addEventListener('install', (e) => {
+  e.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(assets);
+    })
+  );
+});
+
+self.addEventListener('fetch', (e) => {
+  e.respondWith(
+    caches.match(e.request).then((res) => {
+      return res || fetch(e.request);
+    })
+  );
 });
