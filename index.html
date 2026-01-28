@@ -26,7 +26,6 @@
         body { margin: 0; background-color: var(--bg); color: var(--text-main); display: flex; justify-content: center; overflow-x: hidden; scroll-behavior: smooth; }
         .app-container { width: 100%; max-width: 420px; padding: 15px; min-height: 100vh; }
         
-        /* สไตล์กล่องแจ้งเตือนติดตั้งแอป */
         #installBanner {
             display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             width: 90%; max-width: 380px; background: white; padding: 15px; border-radius: 20px;
@@ -36,25 +35,29 @@
         @keyframes slideUp { from { bottom: -100px; opacity: 0; } to { bottom: 20px; opacity: 1; } }
 
         .card { background: var(--card-bg); border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid rgba(20, 184, 166, 0.15); box-shadow: 0 8px 20px rgba(20, 184, 166, 0.05); transition: 0.3s; }
+        
+        /* สไตล์ตารางอัตราจ่าย */
+        .payout-info { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
+        .payout-item { background: linear-gradient(135deg, #fff 0%, #f0fdf4 100%); border: 1px solid #d1fae5; padding: 12px; border-radius: 15px; text-align: center; }
+        .payout-label { font-size: 12px; color: var(--text-muted); font-weight: bold; }
+        .payout-val { font-size: 18px; color: var(--primary-dark); font-weight: 900; }
+
         .btn-primary { width: 100%; padding: 14px; border: none; border-radius: 15px; background: var(--primary); color: white; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; transition: 0.3s; }
         .btn-primary:active { transform: scale(0.98); background: var(--primary-dark); }
         input { width: 100%; padding: 14px; border: 1.5px solid #e5e7eb; border-radius: 12px; font-size: 16px; outline: none; margin-bottom: 10px; transition: 0.3s; }
         
-        /* Numpad & Grid */
         .numpad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 15px 0; }
         .num-key { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; background: white; border: 1px solid #ccfbf1; border-radius: 12px; font-weight: 800; color: var(--primary-dark); cursor: pointer; }
         .type-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
         .type-btn { padding: 12px 0; background: white; border: 1.5px solid #ccfbf1; border-radius: 12px; font-size: 13px; font-weight: 700; color: var(--text-muted); cursor: pointer; }
         .type-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        /* Spotify Prize Design */
         .spotify-prize-card { background: #121212; border-radius: 20px; padding: 15px; margin-bottom: 15px; border: 1px solid #282828; }
         .prize-row { display: grid; grid-template-columns: 1.2fr 1fr 0.8fr 0.8fr; gap: 5px; margin-top: 10px; }
         .prize-item { background: #181818; padding: 10px 3px; border-radius: 10px; border: 1px solid #333; text-align: center; }
         .prize-label { color: #888; font-size: 10px; font-weight: bold; margin-bottom: 3px; }
         .prize-val { color: #1DB954; font-size: 15px; font-weight: 900; letter-spacing: 1px; }
 
-        /* Bill Design */
         #billModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:10000; justify-content:center; align-items:center; padding:20px; }
         .digital-bill { 
             background: linear-gradient(135deg, #a7f3d0 0%, #fef08a 100%); 
@@ -148,6 +151,14 @@
 
         <div id="mainApp" style="display:none;">
             <div id="winAlert"></div>
+            
+            <div class="payout-info">
+                <div class="payout-item"><div class="payout-label">5 ตัว</div><div class="payout-val">x30,000</div></div>
+                <div class="payout-item"><div class="payout-label">4 ตัว</div><div class="payout-val">x5,000</div></div>
+                <div class="payout-item"><div class="payout-label">3 ตัว</div><div class="payout-val">x800</div></div>
+                <div class="payout-item"><div class="payout-label">2 ตัว</div><div class="payout-val">x90</div></div>
+            </div>
+
             <div class="card">
                 <b>เลือกเลขมงคล</b>
                 <div class="type-grid">
@@ -194,14 +205,12 @@ const payout = { 2: 90, 3: 800, 4: 5000, 5: 30000 };
 const limits = { 2: 5000, 3: 2000, 4: 500, 5: 200 };
 const LINE_URL = "https://lin.ee/Mm1caQx";
 
-// --- PWA Service Worker Registration ---
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('sw.js').then(reg => console.log('SW Registered'));
     });
 }
 
-// --- Install App Logic ---
 let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
@@ -217,7 +226,6 @@ window.installApp = async () => {
     deferredPrompt = null;
 };
 
-// --- App Functions ---
 function getNextDrawDate() {
     const now = new Date(); const day = now.getDay(); const hour = now.getHours();
     const currentTime = (hour * 100) + now.getMinutes();
