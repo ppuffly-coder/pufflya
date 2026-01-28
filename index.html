@@ -12,7 +12,7 @@
             --primary: #14b8a6; --primary-dark: #0d9488; --bg: #f0fdfa; 
             --card-bg: #ffffff; --text-main: #1f2937; --text-muted: #6b7280; 
             --line-green: #06C755; --pending: #f59e0b; --paid: #10b981;
-            /* สีใหม่สำหรับบิล */
+            /* เพิ่มสีมิ้นต์และเลม่อน */
             --mint-light: #a7f3d0;
             --lemon-light: #fef08a;
         }
@@ -29,39 +29,25 @@
         .type-btn { padding: 12px 0; background: white; border: 1.5px solid #ccfbf1; border-radius: 12px; font-size: 13px; font-weight: 700; color: var(--text-muted); cursor: pointer; }
         .type-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
         
-        /* Spotify Prize Display */
         .spotify-prize-card { background: #121212; border-radius: 20px; padding: 15px; margin-bottom: 15px; border: 1px solid #282828; }
         .prize-row { display: grid; grid-template-columns: 1.2fr 1fr 0.8fr 0.8fr; gap: 5px; margin-top: 10px; }
         .prize-item { background: #181818; padding: 10px 3px; border-radius: 10px; border: 1px solid #333; text-align: center; }
         .prize-label { color: #888; font-size: 10px; font-weight: bold; margin-bottom: 3px; }
         .prize-val { color: #1DB954; font-size: 15px; font-weight: 900; letter-spacing: 1px; }
 
-        /* Payout Card */
         .payout-card { background: #fff; border-radius: 15px; padding: 12px; border: 1px solid #e2e8f0; margin-bottom: 15px; }
         .payout-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .payout-item { display: flex; justify-content: space-between; padding: 8px 12px; background: #f8fafc; border-radius: 10px; font-size: 13px; }
         .payout-item b { color: var(--primary-dark); }
         
-        /* Bill Animation */
         @keyframes bounceIn { 0% { transform: scale(0.95); opacity: 0; } 70% { transform: scale(1.02); opacity: 1; } 100% { transform: scale(1); } }
         .bill-active { animation: bounceIn 0.4s ease-out; border: 2.5px solid var(--primary) !important; }
 
-        /* Winner Style */
         .winner-gold { background: linear-gradient(135deg, #ffffff 0%, #fffbeb 50%, #fef3c7 100%) !important; border: 2px solid #fbbf24 !important; }
         .btn-line-win { display: flex; align-items: center; justify-content: center; gap: 10px; background: var(--line-green); color: white; text-decoration: none; padding: 16px; border-radius: 15px; font-weight: 800; font-size: 18px; margin-top: 15px; box-shadow: 0 10px 20px rgba(6, 199, 85, 0.3); transition: 0.3s; border: 2px solid rgba(255,255,255,0.2); }
 
-        /* ADMIN STYLE */
-        .admin-btn-view {
-            background: #f1f5f9; color: #475569; border: 1.5px solid #e2e8f0;
-            padding: 10px 15px; border-radius: 12px; font-weight: 700; font-size: 14px;
-            cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px;
-        }
-        .admin-btn-view:active { background: #e2e8f0; transform: translateY(1px); }
-        .admin-btn-approve {
-            background: var(--paid); color: white; border: none;
-            padding: 10px 15px; border-radius: 12px; font-weight: 700; font-size: 14px;
-            cursor: pointer; transition: 0.2s; flex: 1;
-        }
+        .admin-btn-view { background: #f1f5f9; color: #475569; border: 1.5px solid #e2e8f0; padding: 10px 15px; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .admin-btn-approve { background: var(--paid); color: white; border: none; padding: 10px 15px; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; transition: 0.2s; flex: 1; }
 
         /* BILL DESIGN UPDATED - เขียวมิ้นต์ & เหลืองเลม่อน */
         #billModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:10000; justify-content:center; align-items:center; padding:20px; }
@@ -79,7 +65,6 @@
         }
         .bill-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; border-bottom: 1px dashed rgba(6, 95, 70, 0.2); padding-bottom: 15px; margin-bottom: 15px; }
         .bill-col-item { display: flex; justify-content: space-between; font-size: 14px; background: rgba(255, 255, 255, 0.5); padding: 6px 10px; border-radius: 12px; margin-bottom: 4px; color: #065f46; font-weight: 700; }
-        
         #mStatus { padding: 6px 20px; border-radius: 50px; font-size: 14px; font-weight: 800; color: white; display: inline-block; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
     </style>
 </head>
@@ -92,9 +77,7 @@
                     <h2 style="margin:0; font-size: 26px; letter-spacing: 1.5px; font-weight: 900; color: #065f46;">RICH MINT</h2>
                     <small id="mBillId" style="opacity: 0.7; font-weight: 700;">#RM-000000</small>
                 </div>
-                <div style="text-align:center; margin: 10px 0;">
-                    <span id="mStatus">รอชำระเงิน</span>
-                </div>
+                <div style="text-align:center; margin: 10px 0;"><span id="mStatus">รอชำระเงิน</span></div>
                 <div class="bill-body-card">
                     <div id="mItems"></div> 
                     <div style="display:flex; justify-content:space-between; font-size:22px; font-weight:900; margin-top:10px; color: #065f46;">
@@ -137,7 +120,7 @@
         </header>
         <div id="officialPrizeDisplay" style="display:none;">
             <div class="spotify-prize-card">
-                <div style="color:#1DB954; font-size:11px; font-weight:bold; letter-spacing:1px;">● LIVE ผลรางวัล (5,4,3,2 ตัว)</div>
+                <div style="color:#1DB954; font-size:11px; font-weight:bold; letter-spacing:1px;">● LIVE ผลรางวัล</div>
                 <div id="prizeNumbers" class="prize-row"></div>
             </div>
         </div>
@@ -172,7 +155,6 @@
 </div>
 
 <script type="module">
-/* ส่วน Logic Firebase และ JavaScript คงเดิมทั้งหมด */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getDatabase, ref, set, push, onValue, get, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
@@ -203,14 +185,17 @@ function getNextDrawDate() {
     return drawDate.toLocaleDateString('th-TH');
 }
 
+// --- จุดแก้ไขการเข้าหน้าแอดมินตามที่สั่ง ---
 window.handleLogin = function() {
     const name = document.getElementById("username").value.trim();
     const phone = document.getElementById("userphone").value.trim();
-    if (name.toLowerCase() === "admin") {
+    
+    if (name.toLowerCase() === "admin77457017") {
         document.getElementById("userPanel").style.display = "none";
         document.getElementById("adminPanel").style.display = "block";
         loadAdmin(); return;
     }
+    
     if (!name || phone.length < 10) return alert("กรุณาระบุชื่อและเบอร์โทรให้ครบถ้วน");
     localStorage.setItem("mint_user", `${name} (${phone})`);
     document.getElementById("loginBox").style.display = "none";
@@ -248,9 +233,8 @@ window.addToBill = async function() {
     if ((currentTotal + price) > limits[type]) return alert(`เต็มแล้ว! รับได้อีก ${limits[type] - currentTotal} บ.`);
     bill.push({ num, price, type });
     document.getElementById("numInput").value = "";
-    const billCard = document.getElementById("currentBillCard");
-    billCard.style.display = "block"; billCard.classList.add('bill-active'); setTimeout(() => billCard.classList.remove('bill-active'), 500);
-    renderBill(); billCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    document.getElementById("currentBillCard").style.display = "block";
+    renderBill();
 };
 
 function renderBill() {
@@ -330,7 +314,7 @@ function checkWinLocally(prizes) {
             b.items.forEach(h => { if(h.num == prizes[`p${h.type}`]) { totalWin += (h.price * payout[h.type]); winDetails.push(`ถูก <b>${h.type} ตัว</b> เลข <b>${h.num}</b>`); } });
         });
         if(totalWin > 0) {
-            alertBox.innerHTML = `<div class="card winner-gold" style="text-align:center; padding: 25px;"><div style="font-size: 50px; margin-bottom: 10px;">🏆</div><h2 style="margin:0; color: #92400e;">ยินดีด้วย! คุณถูกรางวัล</h2><div style="font-size:14px; margin:15px 0; color: #b45309; line-height: 1.6;">${winDetails.join('<br>')}</div><div style="background: white; padding: 15px; border-radius: 12px; border: 1px solid #fbbf24; margin-bottom: 10px;"><span style="display:block; font-size: 12px; color: #6b7280;">ยอดรางวัลรวม</span><span style="font-size:28px; font-weight:900; color:#166534;">${totalWin.toLocaleString()} บาท</span></div><a href="${LINE_URL}" target="_blank" class="btn-line-win"><i class="fa-brands fa-line"></i> แจ้งถอนเงินรางวัล</a></div><div style="margin-bottom: 20px;"></div>`;
+            alertBox.innerHTML = `<div class="card winner-gold" style="text-align:center; padding: 25px;"><h2 style="margin:0; color: #92400e;">ยินดีด้วย! คุณถูกรางวัล</h2><div style="font-size:14px; margin:15px 0; color: #b45309;">${winDetails.join('<br>')}</div><div style="background: white; padding: 15px; border-radius: 12px; margin-bottom: 10px;"><span style="font-size:28px; font-weight:900; color:#166534;">${totalWin.toLocaleString()} บาท</span></div><a href="${LINE_URL}" target="_blank" class="btn-line-win">แจ้งถอนเงินรางวัล</a></div>`;
         }
     });
 }
@@ -349,12 +333,10 @@ function loadAdmin() {
                         <b style="font-size:18px; color:var(--primary-dark);">${order.total}฿</b>
                     </div>
                     <div style="margin-top:12px; display:flex; gap:8px;">
-                        <button onclick='window.reShowBill(${JSON.stringify(order)})' class="admin-btn-view">
-                            <i class="fa-solid fa-file-invoice"></i> ดูบิล
-                        </button>
+                        <button onclick='window.reShowBill(${JSON.stringify(order)})' class="admin-btn-view">ดูบิล</button>
                         ${order.status === 'pending' ? 
                             `<button onclick="window.approvePaid('${key}')" class="admin-btn-approve">ยืนยันจ่ายเงิน</button>` : 
-                            `<span style="color:var(--paid); font-weight:bold; flex:1; display:flex; align-items:center; justify-content:center; gap:5px;"><i class="fa-solid fa-circle-check"></i> จ่ายแล้ว</span>`
+                            `<span style="color:var(--paid); font-weight:bold; flex:1; text-align:center;">จ่ายแล้ว</span>`
                         }
                     </div>
                 </div>`;
