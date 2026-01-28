@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Rich Mint - Premium Lottery System</title>
-    
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Rich Mint">
@@ -13,7 +12,6 @@
     
     <link rel="icon" type="image/png" href="https://files.catbox.moe/p9o8n8.png">
     <link rel="apple-touch-icon" href="https://files.catbox.moe/p9o8n8.png">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
@@ -22,6 +20,7 @@
             --primary: #14b8a6; --primary-dark: #0d9488; --bg: #f0fdfa; 
             --card-bg: #ffffff; --text-main: #1f2937; --text-muted: #6b7280; 
             --line-green: #06C755; --pending: #f59e0b; --paid: #10b981;
+            /* เพิ่มสีมิ้นต์และเลม่อน */
             --mint-light: #a7f3d0;
             --lemon-light: #fef08a;
         }
@@ -38,7 +37,27 @@
         .type-btn { padding: 12px 0; background: white; border: 1.5px solid #ccfbf1; border-radius: 12px; font-size: 13px; font-weight: 700; color: var(--text-muted); cursor: pointer; }
         .type-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
         
-        /* บิลดีไซน์ มิ้นต์-เลม่อน */
+        .spotify-prize-card { background: #121212; border-radius: 20px; padding: 15px; margin-bottom: 15px; border: 1px solid #282828; }
+        .prize-row { display: grid; grid-template-columns: 1.2fr 1fr 0.8fr 0.8fr; gap: 5px; margin-top: 10px; }
+        .prize-item { background: #181818; padding: 10px 3px; border-radius: 10px; border: 1px solid #333; text-align: center; }
+        .prize-label { color: #888; font-size: 10px; font-weight: bold; margin-bottom: 3px; }
+        .prize-val { color: #1DB954; font-size: 15px; font-weight: 900; letter-spacing: 1px; }
+
+        .payout-card { background: #fff; border-radius: 15px; padding: 12px; border: 1px solid #e2e8f0; margin-bottom: 15px; }
+        .payout-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .payout-item { display: flex; justify-content: space-between; padding: 8px 12px; background: #f8fafc; border-radius: 10px; font-size: 13px; }
+        .payout-item b { color: var(--primary-dark); }
+        
+        @keyframes bounceIn { 0% { transform: scale(0.95); opacity: 0; } 70% { transform: scale(1.02); opacity: 1; } 100% { transform: scale(1); } }
+        .bill-active { animation: bounceIn 0.4s ease-out; border: 2.5px solid var(--primary) !important; }
+
+        .winner-gold { background: linear-gradient(135deg, #ffffff 0%, #fffbeb 50%, #fef3c7 100%) !important; border: 2px solid #fbbf24 !important; }
+        .btn-line-win { display: flex; align-items: center; justify-content: center; gap: 10px; background: var(--line-green); color: white; text-decoration: none; padding: 16px; border-radius: 15px; font-weight: 800; font-size: 18px; margin-top: 15px; box-shadow: 0 10px 20px rgba(6, 199, 85, 0.3); transition: 0.3s; border: 2px solid rgba(255,255,255,0.2); }
+
+        .admin-btn-view { background: #f1f5f9; color: #475569; border: 1.5px solid #e2e8f0; padding: 10px 15px; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .admin-btn-approve { background: var(--paid); color: white; border: none; padding: 10px 15px; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; transition: 0.2s; flex: 1; }
+
+        /* BILL DESIGN UPDATED - เขียวมิ้นต์ & เหลืองเลม่อน */
         #billModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:10000; justify-content:center; align-items:center; padding:20px; }
         .digital-bill { 
             background: linear-gradient(135deg, #a7f3d0 0%, #fef08a 100%); 
@@ -52,19 +71,9 @@
             margin: 10px 20px; padding: 20px; border-radius: 25px; 
             backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.5);
         }
+        .bill-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; border-bottom: 1px dashed rgba(6, 95, 70, 0.2); padding-bottom: 15px; margin-bottom: 15px; }
         .bill-col-item { display: flex; justify-content: space-between; font-size: 14px; background: rgba(255, 255, 255, 0.5); padding: 6px 10px; border-radius: 12px; margin-bottom: 4px; color: #065f46; font-weight: 700; }
-        #mStatus { padding: 6px 20px; border-radius: 50px; font-size: 14px; font-weight: 800; color: white; display: inline-block; margin-bottom: 10px; }
-        
-        .payout-card { background: #fff; border-radius: 15px; padding: 12px; border: 1px solid #e2e8f0; margin-bottom: 15px; }
-        .payout-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .payout-item { display: flex; justify-content: space-between; padding: 8px 12px; background: #f8fafc; border-radius: 10px; font-size: 13px; }
-        .winner-gold { background: linear-gradient(135deg, #ffffff 0%, #fffbeb 50%, #fef3c7 100%) !important; border: 2px solid #fbbf24 !important; }
-        .btn-line-win { display: flex; align-items: center; justify-content: center; gap: 10px; background: var(--line-green); color: white; text-decoration: none; padding: 16px; border-radius: 15px; font-weight: 800; margin-top: 15px; }
-        .spotify-prize-card { background: #121212; border-radius: 20px; padding: 15px; margin-bottom: 15px; border: 1px solid #282828; }
-        .prize-row { display: grid; grid-template-columns: 1.2fr 1fr 0.8fr 0.8fr; gap: 5px; margin-top: 10px; }
-        .prize-item { background: #181818; padding: 10px 3px; border-radius: 10px; border: 1px solid #333; text-align: center; }
-        .prize-label { color: #888; font-size: 10px; font-weight: bold; }
-        .prize-val { color: #1DB954; font-size: 15px; font-weight: 900; }
+        #mStatus { padding: 6px 20px; border-radius: 50px; font-size: 14px; font-weight: 800; color: white; display: inline-block; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
@@ -83,8 +92,8 @@
                         <span>ยอดรวม</span><span id="mTotal">0 บาท</span>
                     </div>
                     <div style="margin-top:15px; font-size:11px; color: #065f46; opacity: 0.8;">
-                        <div>ซื้อเมื่อ: <span id="mBuyDate">-</span></div>
-                        <div style="font-weight:bold; margin-top: 4px;">งวดวันที่: <span id="mDrawDate">-</span></div>
+                        <div><i class="fa-regular fa-calendar"></i> ซื้อเมื่อ: <span id="mBuyDate">-</span></div>
+                        <div style="font-weight:bold; margin-top: 4px;"><i class="fa-solid fa-bullseye"></i> งวดวันที่: <span id="mDrawDate">-</span></div>
                     </div>
                 </div>
             </div>
@@ -101,13 +110,14 @@
             <button onclick="location.reload()" style="border:none; background:#fee2e2; color:#ef4444; padding:8px 15px; border-radius:12px; font-weight:700;">ออก</button>
         </header>
         <div class="card">
-            <b>ประกาศรางวัล (5 ไป 2)</b>
+            <b style="font-size:16px;">ประกาศรางวัล (5 ไป 2)</b>
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin:15px 0;">
                 <input type="number" id="p5" placeholder="5 ตัว"> <input type="number" id="p4" placeholder="4 ตัว">
                 <input type="number" id="p3" placeholder="3 ตัว"> <input type="number" id="p2" placeholder="2 ตัว">
             </div>
             <button class="btn-primary" onclick="window.announce()">บันทึกผลรางวัล</button>
         </div>
+        <div style="margin-bottom: 10px;"><b>รายการบิลทั้งหมด</b></div>
         <div id="adminOrderStats"></div>
     </div>
 
@@ -116,27 +126,24 @@
             <div style="font-size:24px; font-weight:900; color:var(--primary);"><i class="fa-solid fa-coins"></i> Rich Mint</div>
             <button onclick="window.toggleHistory()" style="background:white; border:2px solid var(--primary); color:var(--primary); padding:8px 18px; border-radius:12px; font-weight:800;">ประวัติ</button>
         </header>
-        
         <div id="officialPrizeDisplay" style="display:none;">
             <div class="spotify-prize-card">
-                <div style="color:#1DB954; font-size:11px; font-weight:bold;">● LIVE ผลรางวัล</div>
+                <div style="color:#1DB954; font-size:11px; font-weight:bold; letter-spacing:1px;">● LIVE ผลรางวัล</div>
                 <div id="prizeNumbers" class="prize-row"></div>
             </div>
         </div>
-
         <div id="loginBox">
             <div class="card" style="text-align:center; padding:40px 20px;">
-                <img src="https://files.catbox.moe/p9o8n8.png" style="width:100px; height:100px; margin-bottom:20px; border-radius:25px; box-shadow: 0 10px 20px rgba(20, 184, 166, 0.2);">
+                <div style="font-size:64px; color:var(--primary); margin-bottom:20px;"><i class="fa-solid fa-circle-user"></i></div>
                 <h2 style="margin:0;">เข้าสู่ระบบ</h2>
                 <input type="text" id="username" placeholder="ระบุชื่อของคุณ" style="margin-top:20px;">
                 <input type="number" id="userphone" placeholder="ระบุเบอร์โทรศัพท์ 10 หลัก">
                 <button class="btn-primary" onclick="window.handleLogin()">เริ่มต้นใช้งาน</button>
             </div>
         </div>
-
         <div id="mainApp" style="display:none;">
             <div id="winAlert"></div>
-            <div class="payout-card"><div class="payout-row"><div class="payout-item">5 ตัว <b>x30k</b></div><div class="payout-item">4 ตัว <b>x5k</b></div><div class="payout-item">3 ตัว <b>x800</b></div><div class="payout-item">2 ตัว <b>x90</b></div></div></div>
+            <div class="payout-card"><div class="payout-row"><div class="payout-item">5 ตัว <b>x30,000</b></div><div class="payout-item">4 ตัว <b>x5,000</b></div><div class="payout-item">3 ตัว <b>x800</b></div><div class="payout-item">2 ตัว <b>x90</b></div></div></div>
             <div class="card">
                 <b>เลือกเลขมงคล</b>
                 <div class="type-grid"><button class="type-btn" onclick="window.setType(5, this)">5 ตัว</button><button class="type-btn" onclick="window.setType(4, this)">4 ตัว</button><button class="type-btn" onclick="window.setType(3, this)">3 ตัว</button><button class="type-btn active" onclick="window.setType(2, this)">2 ตัว</button></div>
@@ -145,9 +152,10 @@
                 <button class="btn-primary" onclick="window.addToBill()">เพิ่มลงในบิล</button>
             </div>
             <div class="card" id="currentBillCard" style="display:none;">
-                <div id="currentBill"></div>
-                <div id="billTotal" style="text-align:right; font-weight:900; font-size:22px; margin-top:10px;">ยอดรวม: 0 บาท</div>
-                <button class="btn-primary" style="background:var(--line-green); margin-top:10px;" onclick="window.checkout()"><i class="fa-brands fa-line"></i> สั่งซื้อ & แจ้งชำระเงิน</button>
+                <b>บิลปัจจุบัน</b>
+                <div id="currentBill" style="margin:15px 0;"></div>
+                <div id="billTotal" style="text-align:right; font-weight:900; font-size:22px;">ยอดรวม: 0 บาท</div>
+                <button class="btn-primary" style="background:var(--line-green);" onclick="window.checkout()"><i class="fa-brands fa-line"></i> สั่งซื้อ & แจ้งชำระเงิน</button>
             </div>
             <div id="historyBox" class="card" style="display:none;"><b>ประวัติการซื้อ</b><div id="historyList"></div></div>
         </div>
@@ -160,16 +168,32 @@ import { getDatabase, ref, set, push, onValue, get, update } from "https://www.g
 
 const firebaseConfig = {
     apiKey: "AIzaSyAT48SVlLZGo_XEYmf_K4MD06GqDLa_N9c", authDomain: "puffly-86e43.firebaseapp.com",
-    projectId: "puffly-86e43", databaseURL: "https://puffly-86e43-default-rtdb.asia-southeast1.firebasedatabase.app"
+    projectId: "puffly-86e43", storageBucket: "puffly-86e43.firebasestorage.app",
+    messagingSenderId: "841845436320", appId: "1:841845436320:web:61e2ff1988c48bc634fec5",
+    measurementId: "G-BRQ9YTPR1V", databaseURL: "https://puffly-86e43-default-rtdb.asia-southeast1.firebasedatabase.app"
 };
+
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 let type = 2, bill = [];
 const payout = { 2: 90, 3: 800, 4: 5000, 5: 30000 };
+const limits = { 2: 5000, 3: 2000, 4: 500, 5: 200 };
 const LINE_URL = "https://lin.ee/Mm1caQx";
 
-// ระบบ Login และตรวจสอบแอดมิน (รหัสลับใหม่)
+function getNextDrawDate() {
+    const now = new Date(); const day = now.getDay(); const hour = now.getHours();
+    const currentTime = (hour * 100) + now.getMinutes();
+    let daysUntilNext = 0;
+    if ((day === 1 || day === 3 || day === 5) && currentTime >= 1930) daysUntilNext = (day === 5) ? 3 : 2;
+    else if (day === 1 || day === 3 || day === 5) daysUntilNext = 0;
+    else if (day === 2 || day === 4) daysUntilNext = 1;
+    else if (day === 6) daysUntilNext = 2; else daysUntilNext = 1;
+    const drawDate = new Date(now); drawDate.setDate(now.getDate() + daysUntilNext);
+    return drawDate.toLocaleDateString('th-TH');
+}
+
+// --- จุดแก้ไขการเข้าหน้าแอดมินตามที่สั่ง ---
 window.handleLogin = function() {
     const name = document.getElementById("username").value.trim();
     const phone = document.getElementById("userphone").value.trim();
@@ -180,7 +204,7 @@ window.handleLogin = function() {
         loadAdmin(); return;
     }
     
-    if (!name || phone.length < 10) return alert("กรุณาใส่ข้อมูลให้ครบ");
+    if (!name || phone.length < 10) return alert("กรุณาระบุชื่อและเบอร์โทรให้ครบถ้วน");
     localStorage.setItem("mint_user", `${name} (${phone})`);
     document.getElementById("loginBox").style.display = "none";
     document.getElementById("mainApp").style.display = "block";
@@ -188,7 +212,7 @@ window.handleLogin = function() {
     window.renderPad(); loadHistory(); listenForPrizes();
 };
 
-window.renderPad = () => {
+window.renderPad = function() {
     const box = document.getElementById("numpad"); box.innerHTML = "";
     for(let i=0; i<10; i++) {
         const d = document.createElement("div"); d.className="num-key"; d.innerText=i;
@@ -197,12 +221,24 @@ window.renderPad = () => {
     }
 };
 
-window.setType = (t, el) => { type = t; document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active')); el.classList.add('active'); document.getElementById("numInput").value = ""; };
+window.setType = function(t, el) {
+    type = t;
+    document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active'); document.getElementById("numInput").value = "";
+};
 
-window.addToBill = () => {
+window.addToBill = async function() {
     const num = document.getElementById("numInput").value;
     const price = parseInt(document.getElementById("priceInput").value);
-    if(num.length !== type || price < 5) return alert("ข้อมูลไม่ถูกต้อง");
+    if(num.length !== type || price < 5) return alert("ขั้นต่ำ 5 บาท และเลขต้องครบหลัก");
+    const snapshot = await get(ref(db, 'orders'));
+    let currentTotal = 0;
+    if(snapshot.exists()) {
+        Object.values(snapshot.val()).forEach(bObj => {
+            if(bObj.items) bObj.items.forEach(item => { if(item.num === num && item.type === type) currentTotal += parseInt(item.price); });
+        });
+    }
+    if ((currentTotal + price) > limits[type]) return alert(`เต็มแล้ว! รับได้อีก ${limits[type] - currentTotal} บ.`);
     bill.push({ num, price, type });
     document.getElementById("numInput").value = "";
     document.getElementById("currentBillCard").style.display = "block";
@@ -214,37 +250,79 @@ function renderBill() {
     let total = 0; box.innerHTML = "";
     bill.forEach((item, idx) => {
         total += item.price;
-        box.innerHTML += `<div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #eee;"><span><b>${item.num}</b> (${item.type}ต.)</span><span>${item.price} บ.</span></div>`;
+        box.innerHTML += `<div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #eee;"><span><b>${item.num}</b> (${item.type}ต.)</span><span>${item.price} บ. <i class="fa-solid fa-trash" style="color:red; margin-left:10px;" onclick="window.removeFromBill(${idx})"></i></span></div>`;
     });
     document.getElementById("billTotal").innerText = `ยอดรวม: ${total} บาท`;
 }
 
-window.checkout = () => {
-    if(bill.length === 0) return;
-    const user = localStorage.getItem("mint_user");
-    const newBill = { billId: "RM-"+Date.now().toString().slice(-6), user, items: [...bill], total: bill.reduce((s,i)=>s+i.price,0), buyDate: new Date().toLocaleString('th-TH'), drawDate: "เร็วๆ นี้", status: "pending", timestamp: Date.now() };
-    push(ref(db, 'orders'), newBill).then(() => { showDigitalBill(newBill); window.open(LINE_URL, "_blank"); bill=[]; document.getElementById("currentBillCard").style.display="none"; });
-};
+window.removeFromBill = (idx) => { bill.splice(idx, 1); if(bill.length === 0) document.getElementById("currentBillCard").style.display = "none"; renderBill(); };
 
 function showDigitalBill(b) {
     document.getElementById("mBillId").innerText = `#${b.billId}`;
-    document.getElementById("mStatus").innerText = b.status==='paid'?'ชำระเงินแล้ว':'รอชำระเงิน';
-    document.getElementById("mStatus").style.background = b.status==='paid'?'var(--paid)':'#f59e0b';
-    document.getElementById("mTotal").innerText = `${b.total} บาท`;
+    document.getElementById("mStatus").innerText = b.status === 'paid' ? 'ชำระเงินแล้ว' : 'รอชำระเงิน';
+    document.getElementById("mStatus").style.background = b.status === 'paid' ? 'var(--paid)' : '#f59e0b';
+    document.getElementById("mTotal").innerText = `${b.total.toLocaleString()} บาท`;
     document.getElementById("mBuyDate").innerText = b.buyDate;
     document.getElementById("mDrawDate").innerText = b.drawDate;
-    document.getElementById("mItems").innerHTML = b.items.map(i => `<div class="bill-col-item"><span>${i.num}</span><b>${i.price}</b></div>`).join("");
+    const half = Math.ceil(b.items.length / 2); const leftCol = b.items.slice(0, half); const rightCol = b.items.slice(half);
+    let itemsHtml = `<div class="bill-grid"><div class="bill-column">`;
+    leftCol.forEach(i => itemsHtml += `<div class="bill-col-item"><span>${i.num}</span><b>${i.price}</b></div>`);
+    itemsHtml += `</div><div class="bill-column">`;
+    rightCol.forEach(i => itemsHtml += `<div class="bill-col-item"><span>${i.num}</span><b>${i.price}</b></div>`);
+    itemsHtml += `</div></div>`;
+    document.getElementById("mItems").innerHTML = itemsHtml;
     document.getElementById("billModal").style.display = "flex";
 }
 
-window.saveBillImage = () => { html2canvas(document.getElementById("captureArea"), {scale:2}).then(canvas => { const link = document.createElement('a'); link.download = 'RichMint-Bill.png'; link.href = canvas.toDataURL(); link.click(); }); };
+window.saveBillImage = function() {
+    html2canvas(document.getElementById("captureArea"), { scale: 3, backgroundColor: null }).then(canvas => {
+        const link = document.createElement('a'); link.download = `RichMint-${Date.now()}.png`;
+        link.href = canvas.toDataURL("image/png"); link.click();
+    });
+};
 
-function listenForPrizes() {
-    onValue(ref(db, 'official_prize'), (s) => {
-        if(s.exists()){
+window.checkout = function() {
+    if(bill.length === 0) return;
+    const user = localStorage.getItem("mint_user");
+    const billId = "RM-" + Date.now().toString().slice(-6);
+    const newBill = {
+        billId, user, items: [...bill], total: bill.reduce((s, i) => s + i.price, 0),
+        buyDate: new Date().toLocaleString('th-TH'), drawDate: getNextDrawDate(),
+        status: "pending", timestamp: Date.now()
+    };
+    push(ref(db, 'orders'), newBill).then(() => {
+        showDigitalBill(newBill); window.open(LINE_URL, "_blank");
+        bill = []; document.getElementById("currentBillCard").style.display = "none";
+    });
+};
+
+window.announce = () => {
+    const res = { p2: document.getElementById("p2").value, p3: document.getElementById("p3").value, p4: document.getElementById("p4").value, p5: document.getElementById("p5").value };
+    set(ref(db, 'official_prize'), res).then(() => alert("ประกาศรางวัลสำเร็จ!"));
+};
+
+function listenForPrizes() { 
+    onValue(ref(db, 'official_prize'), (s) => { 
+        if(s.exists()) {
             const p = s.val();
             document.getElementById("officialPrizeDisplay").style.display = "block";
-            document.getElementById("prizeNumbers").innerHTML = `<div class="prize-item"><div class="prize-label">5ตัว</div><div class="prize-val">${p.p5}</div></div><div class="prize-item"><div class="prize-label">4ตัว</div><div class="prize-val">${p.p4}</div></div><div class="prize-item"><div class="prize-label">3ตัว</div><div class="prize-val">${p.p3}</div></div><div class="prize-item"><div class="prize-label">2ตัว</div><div class="prize-val">${p.p2}</div></div>`;
+            document.getElementById("prizeNumbers").innerHTML = `<div class="prize-item"><div class="prize-label">5 ตัว</div><div class="prize-val">${p.p5 || '-----'}</div></div><div class="prize-item"><div class="prize-label">4 ตัว</div><div class="prize-val">${p.p4 || '----'}</div></div><div class="prize-item"><div class="prize-label">3 ตัว</div><div class="prize-val">${p.p3 || '---'}</div></div><div class="prize-item"><div class="prize-label">2 ตัว</div><div class="prize-val">${p.p2 || '--'}</div></div>`;
+            checkWinLocally(p);
+        }
+    }); 
+}
+
+function checkWinLocally(prizes) {
+    const user = localStorage.getItem("mint_user");
+    get(ref(db, 'orders')).then(snapshot => {
+        if(!snapshot.exists()) return;
+        const alertBox = document.getElementById("winAlert"); alertBox.innerHTML = "";
+        let totalWin = 0, winDetails = [];
+        Object.values(snapshot.val()).filter(o => o.user === user && o.status === 'paid').forEach(b => {
+            b.items.forEach(h => { if(h.num == prizes[`p${h.type}`]) { totalWin += (h.price * payout[h.type]); winDetails.push(`ถูก <b>${h.type} ตัว</b> เลข <b>${h.num}</b>`); } });
+        });
+        if(totalWin > 0) {
+            alertBox.innerHTML = `<div class="card winner-gold" style="text-align:center; padding: 25px;"><h2 style="margin:0; color: #92400e;">ยินดีด้วย! คุณถูกรางวัล</h2><div style="font-size:14px; margin:15px 0; color: #b45309;">${winDetails.join('<br>')}</div><div style="background: white; padding: 15px; border-radius: 12px; margin-bottom: 10px;"><span style="font-size:28px; font-weight:900; color:#166534;">${totalWin.toLocaleString()} บาท</span></div><a href="${LINE_URL}" target="_blank" class="btn-line-win">แจ้งถอนเงินรางวัล</a></div>`;
         }
     });
 }
@@ -252,35 +330,51 @@ function listenForPrizes() {
 function loadAdmin() {
     onValue(ref(db, 'orders'), (snapshot) => {
         const statsBox = document.getElementById("adminOrderStats");
-        if(!snapshot.exists()) return statsBox.innerHTML = "ไม่มีข้อมูล";
-        statsBox.innerHTML = Object.entries(snapshot.val()).reverse().map(([key, order]) => `
-            <div class="card">
-                <b>${order.user}</b> - ${order.total}฿
-                <div style="margin-top:10px; display:flex; gap:10px;">
-                    <button class="btn-primary" style="padding:8px; font-size:12px;" onclick='window.reShowBill(${JSON.stringify(order)})'>ดูบิล</button>
-                    <button class="btn-primary" style="padding:8px; font-size:12px; background:${order.status==='pending'?'var(--paid)':'#ccc'}" onclick="window.approvePaid('${key}')">${order.status==='pending'?'ยืนยันจ่าย':'เรียบร้อย'}</button>
-                </div>
-            </div>`).join("");
+        if(!snapshot.exists()) return statsBox.innerText = "ยังไม่มีข้อมูล";
+        get(ref(db, 'official_prize')).then(prizeSnap => {
+            const prizes = prizeSnap.exists() ? prizeSnap.val() : {};
+            statsBox.innerHTML = Object.entries(snapshot.val()).reverse().map(([key, order]) => {
+                let isWinner = order.items.some(i => i.num == prizes[`p${i.type}`]);
+                return `<div class="card ${isWinner ? 'winner-gold' : ''}" style="padding: 15px;">
+                    <div style="display:flex; justify-content:space-between; align-items:start;">
+                        <div><b>${order.user}</b><br><small style="color:#666;">#${order.billId}</small></div>
+                        <b style="font-size:18px; color:var(--primary-dark);">${order.total}฿</b>
+                    </div>
+                    <div style="margin-top:12px; display:flex; gap:8px;">
+                        <button onclick='window.reShowBill(${JSON.stringify(order)})' class="admin-btn-view">ดูบิล</button>
+                        ${order.status === 'pending' ? 
+                            `<button onclick="window.approvePaid('${key}')" class="admin-btn-approve">ยืนยันจ่ายเงิน</button>` : 
+                            `<span style="color:var(--paid); font-weight:bold; flex:1; text-align:center;">จ่ายแล้ว</span>`
+                        }
+                    </div>
+                </div>`;
+            }).join("");
+        });
     });
 }
 
-window.approvePaid = (id) => update(ref(db, `orders/${id}`), { status: "paid" });
-window.toggleHistory = () => { const box = document.getElementById("historyBox"); box.style.display = (box.style.display === "none") ? "block" : "none"; };
-window.reShowBill = (b) => showDigitalBill(b);
+window.approvePaid = (id) => { if(confirm("ยืนยันการชำระเงิน?")) update(ref(db, `orders/${id}`), { status: "paid" }); };
 
 function loadHistory() {
     const user = localStorage.getItem("mint_user");
     onValue(ref(db, 'orders'), (snapshot) => {
         const box = document.getElementById("historyList");
-        if(!snapshot.exists()) return;
-        box.innerHTML = Object.values(snapshot.val()).filter(o => o.user === user).reverse().map(b => `<div class="card" onclick='window.reShowBill(${JSON.stringify(b)})'>#${b.billId} - ${b.total}฿ (${b.status})</div>`).join("");
+        if(!snapshot.exists()) return box.innerHTML = "ไม่มีประวัติ";
+        get(ref(db, 'official_prize')).then(prizeSnap => {
+            const prizes = prizeSnap.exists() ? prizeSnap.val() : {};
+            box.innerHTML = Object.values(snapshot.val()).filter(o => o.user === user).reverse().map(b => {
+                let isWinner = b.status === 'paid' && b.items.some(i => i.num == prizes[`p${i.type}`]);
+                return `<div class="card ${isWinner ? 'winner-gold' : ''}" onclick='window.reShowBill(${JSON.stringify(b)})' style="padding:15px; cursor:pointer;">
+                    <div style="display:flex; justify-content:space-between;"><b>#${b.billId}</b> <b>${b.total}฿</b></div>
+                    <div style="font-size:12px; margin-top:5px; color:${b.status==='paid'?'var(--paid)':'var(--pending)'}">${b.status==='paid'?'ชำระเงินแล้ว':'รอตรวจสอบ'}</div>
+                </div>`;
+            }).join("");
+        });
     });
 }
 
-window.announce = () => {
-    const res = { p2: document.getElementById("p2").value, p3: document.getElementById("p3").value, p4: document.getElementById("p4").value, p5: document.getElementById("p5").value };
-    set(ref(db, 'official_prize'), res).then(() => alert("ประกาศผลแล้ว"));
-};
+window.reShowBill = (b) => showDigitalBill(b);
+window.toggleHistory = () => { const box = document.getElementById("historyBox"); box.style.display = (box.style.display === "none") ? "block" : "none"; };
 </script>
 </body>
 </html>
