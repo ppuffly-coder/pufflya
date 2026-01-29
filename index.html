@@ -36,7 +36,6 @@
 
         .card { background: var(--card-bg); border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid rgba(20, 184, 166, 0.15); box-shadow: 0 8px 20px rgba(20, 184, 166, 0.05); transition: 0.3s; }
         
-        /* สไตล์ตารางอัตราจ่าย */
         .payout-info { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
         .payout-item { background: linear-gradient(135deg, #fff 0%, #f0fdf4 100%); border: 1px solid #d1fae5; padding: 12px; border-radius: 15px; text-align: center; }
         .payout-label { font-size: 12px; color: var(--text-muted); font-weight: bold; }
@@ -58,18 +57,34 @@
         .prize-label { color: #888; font-size: 10px; font-weight: bold; margin-bottom: 3px; }
         .prize-val { color: #1DB954; font-size: 15px; font-weight: 900; letter-spacing: 1px; }
 
-        #billModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:10000; justify-content:center; align-items:center; padding:20px; }
-        .digital-bill { 
-            background: linear-gradient(135deg, #a7f3d0 0%, #fef08a 100%); 
-            width:100%; max-width:350px; border-radius:35px; overflow:hidden; 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.2); color: #065f46; padding-bottom: 25px;
-        }
+        /* Modal บิล & Scroll */
+        #billModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:10000; flex-direction:column; justify-content:center; align-items:center; padding:15px; }
+        .bill-scroll-container { width: 100%; max-width: 350px; max-height: 75vh; overflow-y: auto; border-radius: 35px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); margin-bottom: 15px; }
+        .bill-scroll-container::-webkit-scrollbar { width: 0px; }
+
+        .digital-bill { position: relative; background: linear-gradient(135deg, #a7f3d0 0%, #fef08a 100%); width:100%; min-height: 100%; color: #065f46; padding-bottom: 25px; z-index: 1; }
+        
+        /* ลายน้ำใหม่ ชัดขึ้น */
+        .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 60px; font-weight: 900; color: rgba(6, 95, 70, 0.12); white-space: nowrap; pointer-events: none; z-index: -1; }
+
         .bill-header-area { padding: 30px 20px 10px; text-align: center; }
         .bill-body-card { background: rgba(255, 255, 255, 0.4); margin: 10px 20px; padding: 20px; border-radius: 25px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.5); }
-        .bill-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; border-bottom: 1px dashed rgba(6, 95, 70, 0.2); padding-bottom: 15px; margin-bottom: 15px; }
-        .bill-col-item { display: flex; justify-content: space-between; font-size: 14px; background: rgba(255, 255, 255, 0.5); padding: 6px 10px; border-radius: 12px; margin-bottom: 4px; color: #065f46; font-weight: 700; }
+        
+        .bill-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; border-bottom: 1px dashed rgba(6, 95, 70, 0.2); padding-bottom: 15px; margin-bottom: 15px; }
+        .bill-col-item { display: flex; justify-content: space-between; align-items: center; font-size: 15px; background: rgba(255, 255, 255, 0.6); padding: 8px 12px; border-radius: 14px; margin-bottom: 6px; color: #065f46; border: 1px solid rgba(255,255,255,0.4); }
+        .bill-num { font-weight: 900; font-size: 17px; flex: 1; }
+        .bill-price { font-weight: 700; color: #0d9488; min-width: 50px; text-align: right; }
+
         #mStatus { padding: 6px 20px; border-radius: 50px; font-size: 14px; font-weight: 800; color: white; display: inline-block; margin-bottom: 10px; }
         .winner-gold { background: linear-gradient(135deg, #ffffff 0%, #fffbeb 50%, #fef3c7 100%) !important; border: 2px solid #fbbf24 !important; }
+        
+        .modal-buttons { display: flex; gap: 12px; width: 100%; max-width: 350px; }
+        .qr-area { display: flex; flex-direction: column; align-items: center; margin-top: 15px; }
+
+        /* ส่วนท้ายบิลใหม่ */
+        .bill-footer { text-align: center; margin-top: 10px; color: #065f46; font-weight: 700; }
+        .footer-thanks { font-size: 14px; letter-spacing: 1px; margin-bottom: 2px; }
+        .footer-scan { font-size: 10px; opacity: 0.8; }
     </style>
 </head>
 <body>
@@ -85,8 +100,9 @@
 
 <div class="app-container">
     <div id="billModal">
-        <div style="display:flex; flex-direction:column; align-items:center; width:100%;">
+        <div class="bill-scroll-container">
             <div class="digital-bill" id="captureArea">
+                <div class="watermark">RICH MINT</div>
                 <div class="bill-header-area">
                     <h2 style="margin:0; font-size: 26px; letter-spacing: 1.5px; font-weight: 900; color: #065f46;">RICH MINT</h2>
                     <small id="mBillId" style="opacity: 0.7; font-weight: 700;">#RM-000000</small>
@@ -102,11 +118,17 @@
                         <div style="font-weight:bold; margin-top: 4px;"><i class="fa-solid fa-bullseye"></i> งวดวันที่: <span id="mDrawDate">-</span></div>
                     </div>
                 </div>
+                <div id="mQrArea" class="qr-area"></div>
+                <div class="bill-footer">
+                    <div class="footer-thanks">ขอบคุณที่ใช้บริการ</div>
+                    <div class="footer-scan">สแกนเพื่อตรวจสอบบิล</div>
+                    <div style="font-size:8px; font-weight:900; margin-top:5px; opacity:0.4;">SECURE VERIFIED BILL</div>
+                </div>
             </div>
-            <div style="margin-top:20px; display:flex; gap:12px; width:100%; max-width:350px;">
-                <button class="btn-primary" style="flex:1; background: #14b8a6;" onclick="window.saveBillImage()"><i class="fa-solid fa-download"></i> บันทึกภาพ</button>
-                <button class="btn-primary" style="flex:1; background:#475569;" onclick="document.getElementById('billModal').style.display='none'">ปิด</button>
-            </div>
+        </div>
+        <div class="modal-buttons">
+            <button class="btn-primary" style="flex:1; background: #14b8a6;" onclick="window.saveBillImage()"><i class="fa-solid fa-download"></i> บันทึกภาพ</button>
+            <button class="btn-primary" style="flex:1; background:#475569;" onclick="document.getElementById('billModal').style.display='none'">ปิด</button>
         </div>
     </div>
 
@@ -151,14 +173,12 @@
 
         <div id="mainApp" style="display:none;">
             <div id="winAlert"></div>
-            
             <div class="payout-info">
                 <div class="payout-item"><div class="payout-label">5 ตัว</div><div class="payout-val">x30,000</div></div>
                 <div class="payout-item"><div class="payout-label">4 ตัว</div><div class="payout-val">x5,000</div></div>
                 <div class="payout-item"><div class="payout-label">3 ตัว</div><div class="payout-val">x800</div></div>
                 <div class="payout-item"><div class="payout-label">2 ตัว</div><div class="payout-val">x90</div></div>
             </div>
-
             <div class="card">
                 <b>เลือกเลขมงคล</b>
                 <div class="type-grid">
@@ -174,7 +194,6 @@
                 <div class="numpad" id="numpad"></div>
                 <button class="btn-primary" onclick="window.addToBill()">เพิ่มลงในบิล</button>
             </div>
-            
             <div class="card" id="currentBillCard" style="display:none;">
                 <b>บิลปัจจุบัน</b>
                 <div id="currentBill" style="margin:15px 0;"></div>
@@ -205,27 +224,20 @@ const payout = { 2: 90, 3: 800, 4: 5000, 5: 30000 };
 const limits = { 2: 5000, 3: 2000, 4: 500, 5: 200 };
 const LINE_URL = "https://lin.ee/Mm1caQx";
 
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').then(reg => console.log('SW Registered'));
-    });
-}
-
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    document.getElementById('installBanner').style.display = 'flex';
-});
-
-window.installApp = async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') document.getElementById('installBanner').style.display = 'none';
-    deferredPrompt = null;
+// สแกน QR แล้วเปิดบิลอัตโนมัติ
+window.onload = async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const viewBillId = urlParams.get('viewBill');
+    if (viewBillId) {
+        const snapshot = await get(ref(db, 'orders'));
+        if(snapshot.exists()) {
+            const found = Object.values(snapshot.val()).find(o => o.billId === viewBillId);
+            if(found) showDigitalBill(found);
+        }
+    }
 };
 
+// Core Functions
 function getNextDrawDate() {
     const now = new Date(); const day = now.getDay(); const hour = now.getHours();
     const currentTime = (hour * 100) + now.getMinutes();
@@ -306,19 +318,26 @@ function showDigitalBill(b) {
     document.getElementById("mTotal").innerText = `${b.total.toLocaleString()} บาท`;
     document.getElementById("mBuyDate").innerText = b.buyDate;
     document.getElementById("mDrawDate").innerText = b.drawDate;
+    
     const half = Math.ceil(b.items.length / 2); const leftCol = b.items.slice(0, half); const rightCol = b.items.slice(half);
     let itemsHtml = `<div class="bill-grid"><div class="bill-column">`;
-    leftCol.forEach(i => itemsHtml += `<div class="bill-col-item"><span>${i.num}</span><b>${i.price}</b></div>`);
+    leftCol.forEach(i => itemsHtml += `<div class="bill-col-item"><span class="bill-num">${i.num}</span><span class="bill-price">${i.price}</span></div>`);
     itemsHtml += `</div><div class="bill-column">`;
-    rightCol.forEach(i => itemsHtml += `<div class="bill-col-item"><span>${i.num}</span><b>${i.price}</b></div>`);
+    rightCol.forEach(i => itemsHtml += `<div class="bill-col-item"><span class="bill-num">${i.num}</span><span class="bill-price">${i.price}</span></div>`);
     itemsHtml += `</div></div>`;
     document.getElementById("mItems").innerHTML = itemsHtml;
+
+    // QR Link สำหรับผู้ซื้อสแกนแล้วเด้งมาหน้านี้
+    const scanLink = `${window.location.href.split('?')[0]}?viewBill=${b.billId}`;
+    document.getElementById("mQrArea").innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(scanLink)}" style="width:80px; height:80px; border:3px solid white; border-radius:10px; margin-bottom:5px;">`;
+    
     document.getElementById("billModal").style.display = "flex";
 }
 
 window.saveBillImage = function() {
-    html2canvas(document.getElementById("captureArea"), { scale: 3, backgroundColor: null }).then(canvas => {
-        const link = document.createElement('a'); link.download = `RichMint-${Date.now()}.png`;
+    const target = document.getElementById("captureArea");
+    html2canvas(target, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => {
+        const link = document.createElement('a'); link.download = `RichMint-Bill-${Date.now()}.png`;
         link.href = canvas.toDataURL("image/png"); link.click();
     });
 };
