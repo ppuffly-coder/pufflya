@@ -1,44 +1,39 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="lo">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Rich Mint - Premium Lottery System</title>
+    <title>Rich Maple - Premium Lottery System</title>
     
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#14b8a6">
+    <meta name="theme-color" content="#b91c1c">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Rich Mint">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135706.png">
+    <meta name="apple-mobile-web-app-title" content="Rich Maple">
+    <link rel="apple-touch-icon" href="https://i.ibb.co/1769823196964.jpeg">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
     <style>
         :root { 
-            --primary: #14b8a6; --primary-dark: #0d9488; --bg: #f0fdfa; 
+            --primary: #b91c1c; --primary-dark: #7f1d1d; --bg: #fff5f5; 
             --card-bg: #ffffff; --text-main: #1f2937; --text-muted: #6b7280; 
-            --line-green: #06C755; --pending: #f59e0b; --paid: #10b981;
-            --mint-light: #a7f3d0; --lemon-light: #fef08a;
+            --line-green: #06C755; --pending: #ea580c; --paid: #15803d;
+            --maple-light: #fee2e2; --gold-light: #fef3c7;
         }
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; font-family: 'Noto Sans Lao', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; background-color: var(--bg); color: var(--text-main); display: flex; justify-content: center; overflow-x: hidden; scroll-behavior: smooth; }
         .app-container { width: 100%; max-width: 420px; padding: 15px; min-height: 100vh; }
         
-        #installBanner {
-            display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 380px; background: white; padding: 15px; border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 10001; border: 2px solid var(--primary);
-            align-items: center; gap: 15px; animation: slideUp 0.5s ease-out;
-        }
-        @keyframes slideUp { from { bottom: -100px; opacity: 0; } to { bottom: 20px; opacity: 1; } }
-
-        .card { background: var(--card-bg); border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid rgba(20, 184, 166, 0.15); box-shadow: 0 8px 20px rgba(20, 184, 166, 0.05); transition: 0.3s; }
+        .card { background: var(--card-bg); border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid rgba(185, 28, 28, 0.15); box-shadow: 0 8px 20px rgba(185, 28, 28, 0.05); transition: 0.3s; }
         
-        /* สไตล์ตารางอัตราจ่าย */
-        .payout-info { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
-        .payout-item { background: linear-gradient(135deg, #fff 0%, #f0fdf4 100%); border: 1px solid #d1fae5; padding: 12px; border-radius: 15px; text-align: center; }
+        .btn-view-prize { background: #fff; border: 1.5px solid var(--primary); color: var(--primary); padding: 10px; border-radius: 12px; width: 100%; font-weight: 800; margin-bottom: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        
+        #prizeTableModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:20000; justify-content:center; align-items:center; padding:20px; }
+        .prize-table-content { background: white; width: 100%; max-width: 350px; border-radius: 25px; padding: 20px; position: relative; }
+        .payout-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .payout-item { background: #fff1f1; border: 1px solid #fecaca; padding: 12px; border-radius: 15px; text-align: center; }
         .payout-label { font-size: 12px; color: var(--text-muted); font-weight: bold; }
         .payout-val { font-size: 18px; color: var(--primary-dark); font-weight: 900; }
 
@@ -47,66 +42,89 @@
         input { width: 100%; padding: 14px; border: 1.5px solid #e5e7eb; border-radius: 12px; font-size: 16px; outline: none; margin-bottom: 10px; transition: 0.3s; }
         
         .numpad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 15px 0; }
-        .num-key { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; background: white; border: 1px solid #ccfbf1; border-radius: 12px; font-weight: 800; color: var(--primary-dark); cursor: pointer; }
+        .num-key { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; background: white; border: 1px solid #fecaca; border-radius: 12px; font-weight: 800; color: var(--primary-dark); cursor: pointer; }
         .type-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
-        .type-btn { padding: 12px 0; background: white; border: 1.5px solid #ccfbf1; border-radius: 12px; font-size: 13px; font-weight: 700; color: var(--text-muted); cursor: pointer; }
+        .type-btn { padding: 12px 0; background: white; border: 1.5px solid #fecaca; border-radius: 12px; font-size: 13px; font-weight: 700; color: var(--text-muted); cursor: pointer; }
         .type-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        .spotify-prize-card { background: #121212; border-radius: 20px; padding: 15px; margin-bottom: 15px; border: 1px solid #282828; }
+        .spotify-prize-card { background: #1a1a1a; border-radius: 20px; padding: 15px; margin-bottom: 15px; border: 1px solid #333; }
         .prize-row { display: grid; grid-template-columns: 1.2fr 1fr 0.8fr 0.8fr; gap: 5px; margin-top: 10px; }
-        .prize-item { background: #181818; padding: 10px 3px; border-radius: 10px; border: 1px solid #333; text-align: center; }
-        .prize-label { color: #888; font-size: 10px; font-weight: bold; margin-bottom: 3px; }
-        .prize-val { color: #1DB954; font-size: 15px; font-weight: 900; letter-spacing: 1px; }
+        .prize-item { background: #262626; padding: 10px 3px; border-radius: 10px; border: 1px solid #444; text-align: center; }
+        .prize-label { color: #aaa; font-size: 10px; font-weight: bold; margin-bottom: 3px; }
+        .prize-val { color: #ef4444; font-size: 15px; font-weight: 900; letter-spacing: 1px; }
 
-        #billModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:10000; justify-content:center; align-items:center; padding:20px; }
-        .digital-bill { 
-            background: linear-gradient(135deg, #a7f3d0 0%, #fef08a 100%); 
-            width:100%; max-width:350px; border-radius:35px; overflow:hidden; 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.2); color: #065f46; padding-bottom: 25px;
-        }
-        .bill-header-area { padding: 30px 20px 10px; text-align: center; }
-        .bill-body-card { background: rgba(255, 255, 255, 0.4); margin: 10px 20px; padding: 20px; border-radius: 25px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.5); }
-        .bill-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; border-bottom: 1px dashed rgba(6, 95, 70, 0.2); padding-bottom: 15px; margin-bottom: 15px; }
-        .bill-col-item { display: flex; justify-content: space-between; font-size: 14px; background: rgba(255, 255, 255, 0.5); padding: 6px 10px; border-radius: 12px; margin-bottom: 4px; color: #065f46; font-weight: 700; }
+        #billModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:10000; flex-direction:column; justify-content:center; align-items:center; padding:15px; }
+        .bill-scroll-container { width: 100%; max-width: 350px; max-height: 75vh; overflow-y: auto; border-radius: 35px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); margin-bottom: 15px; }
+        
+        .digital-bill { position: relative; background: #ffffff; width:100%; min-height: 100%; color: #333; padding-bottom: 25px; z-index: 1; border: 1px solid #eee; }
+        .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 50px; font-weight: 900; color: rgba(185, 28, 28, 0.04); white-space: nowrap; pointer-events: none; z-index: -1; }
+
+        .bill-header-area { padding: 40px 20px 10px; text-align: center; } 
+        .bill-body-card { background: #fffcfc; margin: 10px 20px; padding: 20px; border-radius: 25px; border: 1px solid rgba(185, 28, 28, 0.1); }
+        
+        .bill-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; border-bottom: 1px dashed rgba(185, 28, 28, 0.2); padding-bottom: 15px; margin-bottom: 15px; }
+        .bill-col-item { display: flex; justify-content: space-between; align-items: center; font-size: 15px; background: white; padding: 8px 12px; border-radius: 14px; margin-bottom: 6px; color: #333; border: 1px solid #fecaca; }
+        .bill-num { font-weight: 900; font-size: 17px; flex: 1; color: var(--primary); }
+        .bill-price { font-weight: 700; color: #555; min-width: 50px; text-align: right; }
+
         #mStatus { padding: 6px 20px; border-radius: 50px; font-size: 14px; font-weight: 800; color: white; display: inline-block; margin-bottom: 10px; }
         .winner-gold { background: linear-gradient(135deg, #ffffff 0%, #fffbeb 50%, #fef3c7 100%) !important; border: 2px solid #fbbf24 !important; }
+        
+        .modal-buttons { display: flex; gap: 12px; width: 100%; max-width: 350px; }
+        .qr-area { display: flex; flex-direction: column; align-items: center; margin-top: 15px; }
+
+        .bill-footer { text-align: center; margin-top: 10px; color: var(--primary); font-weight: 700; }
+        .footer-thanks { font-size: 14px; letter-spacing: 1px; margin-bottom: 2px; }
+        .footer-scan { font-size: 10px; opacity: 0.6; color: #666; }
+        #mBillId { font-size: 11px; opacity: 0.6; font-weight: 700; margin-top: 5px; display: block; }
     </style>
 </head>
 <body>
 
-<div id="installBanner">
-    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135706.png" width="50" height="50" style="border-radius:12px;">
-    <div style="flex:1;">
-        <b style="font-size:14px;">ติดตั้ง Rich Mint</b><br>
-        <small style="color:var(--text-muted);">ใช้งานสะดวกผ่านหน้าจอโฮม</small>
+<div id="prizeTableModal">
+    <div class="prize-table-content">
+        <h3 style="margin:0; text-align:center; color:var(--primary);">ตารางเงินรางวัล</h3>
+        <div class="payout-grid">
+            <div class="payout-item"><div class="payout-label">5 ตัว</div><div class="payout-val">x25,000</div></div>
+            <div class="payout-item"><div class="payout-label">4 ตัว</div><div class="payout-val">x4,000</div></div>
+            <div class="payout-item"><div class="payout-label">3 ตัว</div><div class="payout-val">x500</div></div>
+            <div class="payout-item"><div class="payout-label">2 ตัว</div><div class="payout-val">x70</div></div>
+        </div>
+        <button class="btn-primary" style="margin-top:20px; background:#475569;" onclick="document.getElementById('prizeTableModal').style.display='none'">ปิด</button>
     </div>
-    <button onclick="installApp()" style="background:var(--primary); color:white; border:none; padding:8px 15px; border-radius:10px; font-weight:bold;">ติดตั้ง</button>
 </div>
 
 <div class="app-container">
     <div id="billModal">
-        <div style="display:flex; flex-direction:column; align-items:center; width:100%;">
+        <div class="bill-scroll-container">
             <div class="digital-bill" id="captureArea">
+                <div class="watermark">RICH MAPLE</div>
                 <div class="bill-header-area">
-                    <h2 style="margin:0; font-size: 26px; letter-spacing: 1.5px; font-weight: 900; color: #065f46;">RICH MINT</h2>
-                    <small id="mBillId" style="opacity: 0.7; font-weight: 700;">#RM-000000</small>
+                    <h2 style="margin:0; font-size: 26px; letter-spacing: 1.5px; font-weight: 900; color: var(--primary);">RICH MAPLE</h2>
                 </div>
                 <div style="text-align:center; margin: 10px 0;"><span id="mStatus">รอชำระเงิน</span></div>
                 <div class="bill-body-card">
                     <div id="mItems"></div> 
-                    <div style="display:flex; justify-content:space-between; font-size:22px; font-weight:900; margin-top:10px; color: #065f46;">
+                    <div style="display:flex; justify-content:space-between; font-size:22px; font-weight:900; margin-top:10px; color: var(--primary);">
                         <span>ยอดรวม</span><span id="mTotal">0 บาท</span>
                     </div>
-                    <div style="margin-top:15px; font-size:11px; color: #065f46; opacity: 0.8;">
+                    <div style="margin-top:15px; font-size:11px; color: #666;">
                         <div><i class="fa-regular fa-calendar"></i> ซื้อเมื่อ: <span id="mBuyDate">-</span></div>
-                        <div style="font-weight:bold; margin-top: 4px;"><i class="fa-solid fa-bullseye"></i> งวดวันที่: <span id="mDrawDate">-</span></div>
+                        <div style="font-weight:bold; margin-top: 4px; color: var(--primary);"><i class="fa-solid fa-bullseye"></i> งวดวันที่: <span id="mDrawDate">-</span></div>
                     </div>
                 </div>
+                <div id="mQrArea" class="qr-area"></div>
+                <div class="bill-footer">
+                    <div class="footer-thanks">ขอบคุณที่ใช้บริการ</div>
+                    <div class="footer-scan">สแกนเพื่อตรวจสอบบิล</div>
+                    <small id="mBillId">#RM-000000</small>
+                    <div style="font-size:8px; font-weight:900; margin-top:5px; opacity:0.3;">SECURE VERIFIED BILL</div>
+                </div>
             </div>
-            <div style="margin-top:20px; display:flex; gap:12px; width:100%; max-width:350px;">
-                <button class="btn-primary" style="flex:1; background: #14b8a6;" onclick="window.saveBillImage()"><i class="fa-solid fa-download"></i> บันทึกภาพ</button>
-                <button class="btn-primary" style="flex:1; background:#475569;" onclick="document.getElementById('billModal').style.display='none'">ปิด</button>
-            </div>
+        </div>
+        <div class="modal-buttons">
+            <button class="btn-primary" style="flex:1; background: var(--primary);" onclick="window.saveBillImage()"><i class="fa-solid fa-download"></i> บันทึกภาพ</button>
+            <button class="btn-primary" style="background:#475569;" onclick="document.getElementById('billModal').style.display='none'">ปิด</button>
         </div>
     </div>
 
@@ -128,21 +146,20 @@
 
     <div id="userPanel">
         <header id="appHeader" style="display:none; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <div style="font-size:24px; font-weight:900; color:var(--primary);"><i class="fa-solid fa-coins"></i> Rich Mint</div>
+            <div style="font-size:24px; font-weight:900; color:var(--primary);"><i class="fa-solid fa-leaf"></i> Rich Maple</div>
             <button onclick="window.toggleHistory()" style="background:white; border:2px solid var(--primary); color:var(--primary); padding:8px 18px; border-radius:12px; font-weight:800;">ประวัติ</button>
         </header>
         
         <div id="officialPrizeDisplay" style="display:none;">
             <div class="spotify-prize-card">
-                <div style="color:#1DB954; font-size:11px; font-weight:bold; letter-spacing:1px;">● LIVE ผลรางวัล</div>
+                <div style="color:#ef4444; font-size:11px; font-weight:bold; letter-spacing:1px;">● LIVE ผลรางวัล</div>
                 <div id="prizeNumbers" class="prize-row"></div>
             </div>
         </div>
 
         <div id="loginBox">
             <div class="card" style="text-align:center; padding:40px 20px;">
-                <div style="font-size:64px; color:var(--primary); margin-bottom:20px;"><i class="fa-solid fa-circle-user"></i></div>
-                <h2>เข้าสู่ระบบ</h2>
+                <h2 style="color:var(--primary); margin-top:0;">เข้าสู่ระบบ</h2>
                 <input type="text" id="username" placeholder="ระบุชื่อของคุณ">
                 <input type="number" id="userphone" placeholder="ระบุเบอร์โทรศัพท์ 10 หลัก">
                 <button class="btn-primary" onclick="window.handleLogin()">เริ่มต้นใช้งาน</button>
@@ -152,12 +169,9 @@
         <div id="mainApp" style="display:none;">
             <div id="winAlert"></div>
             
-            <div class="payout-info">
-                <div class="payout-item"><div class="payout-label">5 ตัว</div><div class="payout-val">x30,000</div></div>
-                <div class="payout-item"><div class="payout-label">4 ตัว</div><div class="payout-val">x5,000</div></div>
-                <div class="payout-item"><div class="payout-label">3 ตัว</div><div class="payout-val">x800</div></div>
-                <div class="payout-item"><div class="payout-label">2 ตัว</div><div class="payout-val">x90</div></div>
-            </div>
+            <button class="btn-view-prize" onclick="document.getElementById('prizeTableModal').style.display='flex'">
+                <i class="fa-solid fa-table-list"></i> ดูตารางจ่ายเงินรางวัล
+            </button>
 
             <div class="card">
                 <b>เลือกเลขมงคล</b>
@@ -174,7 +188,6 @@
                 <div class="numpad" id="numpad"></div>
                 <button class="btn-primary" onclick="window.addToBill()">เพิ่มลงในบิล</button>
             </div>
-            
             <div class="card" id="currentBillCard" style="display:none;">
                 <b>บิลปัจจุบัน</b>
                 <div id="currentBill" style="margin:15px 0;"></div>
@@ -201,29 +214,20 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 let type = 2, bill = [];
-const payout = { 2: 90, 3: 800, 4: 5000, 5: 30000 };
+const payout = { 2: 70, 3: 500, 4: 4000, 5: 25000 };
 const limits = { 2: 5000, 3: 2000, 4: 500, 5: 200 };
 const LINE_URL = "https://lin.ee/Mm1caQx";
 
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').then(reg => console.log('SW Registered'));
-    });
-}
-
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    document.getElementById('installBanner').style.display = 'flex';
-});
-
-window.installApp = async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') document.getElementById('installBanner').style.display = 'none';
-    deferredPrompt = null;
+window.onload = async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const viewBillId = urlParams.get('viewBill');
+    if (viewBillId) {
+        const snapshot = await get(ref(db, 'orders'));
+        if(snapshot.exists()) {
+            const found = Object.values(snapshot.val()).find(o => o.billId === viewBillId);
+            if(found) showDigitalBill(found);
+        }
+    }
 };
 
 function getNextDrawDate() {
@@ -272,15 +276,23 @@ window.setType = function(t, el) {
 window.addToBill = async function() {
     const num = document.getElementById("numInput").value;
     const price = parseInt(document.getElementById("priceInput").value);
+    const nextDrawDate = getNextDrawDate();
+
     if(num.length !== type || price < 5) return alert("ขั้นต่ำ 5 บาท และเลขต้องครบหลัก");
+
     const snapshot = await get(ref(db, 'orders'));
     let currentTotal = 0;
     if(snapshot.exists()) {
         Object.values(snapshot.val()).forEach(bObj => {
-            if(bObj.items) bObj.items.forEach(item => { if(item.num === num && item.type === type) currentTotal += parseInt(item.price); });
+            if(bObj.drawDate === nextDrawDate && bObj.items) {
+                bObj.items.forEach(item => { 
+                    if(item.num === num && item.type === type) currentTotal += parseInt(item.price); 
+                });
+            }
         });
     }
     if ((currentTotal + price) > limits[type]) return alert(`เต็มแล้ว! รับได้อีก ${limits[type] - currentTotal} บ.`);
+    
     bill.push({ num, price, type });
     document.getElementById("numInput").value = "";
     document.getElementById("currentBillCard").style.display = "block";
@@ -292,7 +304,7 @@ function renderBill() {
     let total = 0; box.innerHTML = "";
     bill.forEach((item, idx) => {
         total += item.price;
-        box.innerHTML += `<div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #eee;"><span><b>${item.num}</b> (${item.type}ต.)</span><span>${item.price} บ. <i class="fa-solid fa-trash" style="color:red; margin-left:10px;" onclick="window.removeFromBill(${idx})"></i></span></div>`;
+        box.innerHTML += `<div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #eee;"><span><b style="color:var(--primary);">${item.num}</b> (${item.type}ต.)</span><span>${item.price} <i class="fa-solid fa-trash" style="color:red; margin-left:10px;" onclick="window.removeFromBill(${idx})"></i></span></div>`;
     });
     document.getElementById("billTotal").innerText = `ยอดรวม: ${total} บาท`;
 }
@@ -302,23 +314,29 @@ window.removeFromBill = (idx) => { bill.splice(idx, 1); if(bill.length === 0) do
 function showDigitalBill(b) {
     document.getElementById("mBillId").innerText = `#${b.billId}`;
     document.getElementById("mStatus").innerText = b.status === 'paid' ? 'ชำระเงินแล้ว' : 'รอชำระเงิน';
-    document.getElementById("mStatus").style.background = b.status === 'paid' ? 'var(--paid)' : '#f59e0b';
+    document.getElementById("mStatus").style.background = b.status === 'paid' ? 'var(--paid)' : '#ea580c';
     document.getElementById("mTotal").innerText = `${b.total.toLocaleString()} บาท`;
     document.getElementById("mBuyDate").innerText = b.buyDate;
     document.getElementById("mDrawDate").innerText = b.drawDate;
+    
     const half = Math.ceil(b.items.length / 2); const leftCol = b.items.slice(0, half); const rightCol = b.items.slice(half);
     let itemsHtml = `<div class="bill-grid"><div class="bill-column">`;
-    leftCol.forEach(i => itemsHtml += `<div class="bill-col-item"><span>${i.num}</span><b>${i.price}</b></div>`);
+    leftCol.forEach(i => itemsHtml += `<div class="bill-col-item"><span class="bill-num">${i.num}</span><span class="bill-price">${i.price}</span></div>`);
     itemsHtml += `</div><div class="bill-column">`;
-    rightCol.forEach(i => itemsHtml += `<div class="bill-col-item"><span>${i.num}</span><b>${i.price}</b></div>`);
+    rightCol.forEach(i => itemsHtml += `<div class="bill-col-item"><span class="bill-num">${i.num}</span><span class="bill-price">${i.price}</span></div>`);
     itemsHtml += `</div></div>`;
     document.getElementById("mItems").innerHTML = itemsHtml;
+
+    const scanLink = `${window.location.href.split('?')[0]}?viewBill=${b.billId}`;
+    document.getElementById("mQrArea").innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(scanLink)}" style="width:80px; height:80px; border:3px solid white; border-radius:10px; margin-bottom:5px;">`;
+    
     document.getElementById("billModal").style.display = "flex";
 }
 
 window.saveBillImage = function() {
-    html2canvas(document.getElementById("captureArea"), { scale: 3, backgroundColor: null }).then(canvas => {
-        const link = document.createElement('a'); link.download = `RichMint-${Date.now()}.png`;
+    const target = document.getElementById("captureArea");
+    html2canvas(target, { scale: 3, backgroundColor: '#ffffff', useCORS: true }).then(canvas => {
+        const link = document.createElement('a'); link.download = `RichMaple-Bill-${Date.now()}.png`;
         link.href = canvas.toDataURL("image/png"); link.click();
     });
 };
@@ -380,7 +398,7 @@ function loadAdmin() {
                 return `<div class="card ${isWinner ? 'winner-gold' : ''}" style="padding: 15px;">
                     <div style="display:flex; justify-content:space-between; align-items:start;">
                         <div><b>${order.user}</b><br><small style="color:#666;">#${order.billId}</small></div>
-                        <b style="font-size:18px; color:var(--primary-dark);">${order.total}฿</b>
+                        <b style="font-size:18px; color:var(--primary-dark);">${order.total}</b>
                     </div>
                     <div style="margin-top:12px; display:flex; gap:8px;">
                         <button onclick='window.reShowBill(${JSON.stringify(order)})' style="flex:1; padding:8px; border-radius:10px; border:1px solid #ccc;">ดูบิล</button>
@@ -407,7 +425,7 @@ function loadHistory() {
             box.innerHTML = Object.values(snapshot.val()).filter(o => o.user === user).reverse().map(b => {
                 let isWinner = b.status === 'paid' && b.items.some(i => i.num == prizes[`p${i.type}`]);
                 return `<div class="card ${isWinner ? 'winner-gold' : ''}" onclick='window.reShowBill(${JSON.stringify(b)})' style="padding:15px; cursor:pointer;">
-                    <div style="display:flex; justify-content:space-between;"><b>#${b.billId}</b> <b>${b.total}฿</b></div>
+                    <div style="display:flex; justify-content:space-between;"><b>#${b.billId}</b> <b>${b.total}</b></div>
                     <div style="font-size:12px; margin-top:5px; color:${b.status==='paid'?'var(--paid)':'var(--pending)'}">${b.status==='paid'?'ชำระเงินแล้ว':'รอตรวจสอบ'}</div>
                 </div>`;
             }).join("");
